@@ -1,9 +1,9 @@
-# dune exec src/poker.exe
+# dune utop lib
 # OCAMLPARAM: unset
 # Shared cache: disabled
-# Workspace root: /Users/akmatchev/Documents/Courses/CS-3110/Poker
-# Auto-detected concurrency: 8
-$ /Users/akmatchev/.opam/cs3110-2023fa/bin/ocamlc.opt -config > /var/folders/r3/zgmwdtyd1bj3kxtwrsb5sbj00000gn/T/dune_b9a784_output
+# Workspace root: "/Users/mac/Desktop/3110/Final Project/Poker"
+# Auto-detected concurrency: 4
+$ /Users/mac/.opam/cs3110-2023fa/bin/ocamlc.opt -config > /var/folders/dc/gfl3r3bd37l68gt2fj9l9g2r0000gn/T/dune_a4cd3b_output
 # Dune context:
 #  { name = "default"
 #  ; kind = "default"
@@ -12,45 +12,42 @@ $ /Users/akmatchev/.opam/cs3110-2023fa/bin/ocamlc.opt -config > /var/folders/r3/
 #  ; for_host = None
 #  ; fdo_target_exe = None
 #  ; build_dir = In_build_dir "default"
-#  ; ocaml_bin = External "/Users/akmatchev/.opam/cs3110-2023fa/bin"
-#  ; ocaml = Ok External "/Users/akmatchev/.opam/cs3110-2023fa/bin/ocaml"
-#  ; ocamlc = External "/Users/akmatchev/.opam/cs3110-2023fa/bin/ocamlc.opt"
-#  ; ocamlopt =
-#      Ok External "/Users/akmatchev/.opam/cs3110-2023fa/bin/ocamlopt.opt"
-#  ; ocamldep =
-#      Ok External "/Users/akmatchev/.opam/cs3110-2023fa/bin/ocamldep.opt"
+#  ; ocaml_bin = External "/Users/mac/.opam/cs3110-2023fa/bin"
+#  ; ocaml = Ok External "/Users/mac/.opam/cs3110-2023fa/bin/ocaml"
+#  ; ocamlc = External "/Users/mac/.opam/cs3110-2023fa/bin/ocamlc.opt"
+#  ; ocamlopt = Ok External "/Users/mac/.opam/cs3110-2023fa/bin/ocamlopt.opt"
+#  ; ocamldep = Ok External "/Users/mac/.opam/cs3110-2023fa/bin/ocamldep.opt"
 #  ; ocamlmklib =
-#      Ok External "/Users/akmatchev/.opam/cs3110-2023fa/bin/ocamlmklib.opt"
+#      Ok External "/Users/mac/.opam/cs3110-2023fa/bin/ocamlmklib.opt"
 #  ; env =
 #      map
 #        { "DUNE_OCAML_HARDCODED" :
-#            "/Users/akmatchev/.opam/cs3110-2023fa/lib/ocaml:/Users/akmatchev/.opam/cs3110-2023fa/lib"
-#        ; "DUNE_OCAML_STDLIB" :
-#            "/Users/akmatchev/.opam/cs3110-2023fa/lib/ocaml"
-#        ; "DUNE_SOURCEROOT" :
-#            "/Users/akmatchev/Documents/Courses/CS-3110/Poker"
+#            "/Users/mac/.opam/cs3110-2023fa/lib/ocaml:/Users/mac/.opam/cs3110-2023fa/lib"
+#        ; "DUNE_OCAML_STDLIB" : "/Users/mac/.opam/cs3110-2023fa/lib/ocaml"
+#        ; "DUNE_SOURCEROOT" : "/Users/mac/Desktop/3110/Final Project/Poker"
 #        ; "INSIDE_DUNE" :
-#            "/Users/akmatchev/Documents/Courses/CS-3110/Poker/_build/default"
+#            "/Users/mac/Desktop/3110/Final Project/Poker/_build/default"
+#        ; "MANPATH" :
+#            "/Users/mac/Desktop/3110/Final Project/Poker/_build/install/default/man"
 #        ; "OCAMLFIND_IGNORE_DUPS_IN" :
-#            "/Users/akmatchev/Documents/Courses/CS-3110/Poker/_build/install/default/lib"
+#            "/Users/mac/Desktop/3110/Final Project/Poker/_build/install/default/lib"
 #        ; "OCAMLPATH" :
-#            "/Users/akmatchev/Documents/Courses/CS-3110/Poker/_build/install/default/lib"
+#            "/Users/mac/Desktop/3110/Final Project/Poker/_build/install/default/lib"
 #        ; "OCAMLTOP_INCLUDE_PATH" :
-#            "/Users/akmatchev/Documents/Courses/CS-3110/Poker/_build/install/default/lib/toplevel"
+#            "/Users/mac/Desktop/3110/Final Project/Poker/_build/install/default/lib/toplevel"
 #        ; "OCAML_COLOR" : "always"
 #        ; "OPAMCOLOR" : "always"
 #        }
 #  ; findlib_paths =
-#      [ External "/Users/akmatchev/.opam/cs3110-2023fa/lib/ocaml"
-#      ; External "/Users/akmatchev/.opam/cs3110-2023fa/lib"
+#      [ External "/Users/mac/.opam/cs3110-2023fa/lib/ocaml"
+#      ; External "/Users/mac/.opam/cs3110-2023fa/lib"
 #      ]
 #  ; natdynlink_supported = true
 #  ; supports_shared_libraries = true
 #  ; ocaml_config =
 #      { version = "5.0.0"
-#      ; standard_library_default =
-#          "/Users/akmatchev/.opam/cs3110-2023fa/lib/ocaml"
-#      ; standard_library = "/Users/akmatchev/.opam/cs3110-2023fa/lib/ocaml"
+#      ; standard_library_default = "/Users/mac/.opam/cs3110-2023fa/lib/ocaml"
+#      ; standard_library = "/Users/mac/.opam/cs3110-2023fa/lib/ocaml"
 #      ; standard_runtime = "the_standard_runtime_variable_was_deleted"
 #      ; ccomp_type = "cc"
 #      ; c_compiler = "cc"
@@ -80,7 +77,7 @@ $ /Users/akmatchev/.opam/cs3110-2023fa/bin/ocamlc.opt -config > /var/folders/r3/
 #      ; native_c_libraries = [ "-lm"; "-lpthread" ]
 #      ; native_pack_linker = [ "ld"; "-r"; "-o" ]
 #      ; cc_profile = []
-#      ; architecture = "arm64"
+#      ; architecture = "amd64"
 #      ; model = "default"
 #      ; int_size = 63
 #      ; word_size = 64
@@ -96,8 +93,8 @@ $ /Users/akmatchev/.opam/cs3110-2023fa/bin/ocamlc.opt -config > /var/folders/r3/
 #      ; os_type = "Unix"
 #      ; default_executable_name = "a.out"
 #      ; systhread_supported = true
-#      ; host = "aarch64-apple-darwin21.4.0"
-#      ; target = "aarch64-apple-darwin21.4.0"
+#      ; host = "x86_64-apple-darwin21.6.0"
+#      ; target = "x86_64-apple-darwin21.6.0"
 #      ; profiling = false
 #      ; flambda = false
 #      ; spacetime = false
@@ -117,5 +114,4 @@ $ /Users/akmatchev/.opam/cs3110-2023fa/bin/ocamlc.opt -config > /var/folders/r3/
 #      ; windows_unicode = false
 #      }
 #  }
-$ (cd _build/default && /Users/akmatchev/.opam/cs3110-2023fa/bin/ocamlopt.opt -w +a-4-6-7-9-27-29-30-32..42-44-45-48-50-60-66..70 -warn-error -a+31 -g -I src/.poker.eobjs/byte -I src/.poker.eobjs/native -intf-suffix .ml -no-alias-deps -opaque -o src/.poker.eobjs/native/dune__exe__Poker.cmx -c -impl src/poker.ml)
-$ (cd _build/default && /Users/akmatchev/.opam/cs3110-2023fa/bin/ocamlopt.opt -w +a-4-6-7-9-27-29-30-32..42-44-45-48-50-60-66..70 -warn-error -a+31 -g -o src/poker.exe src/.poker.eobjs/native/dune__exe__Poker.cmx)
+$ (cd _build/default && /Users/mac/.opam/cs3110-2023fa/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -w -24 -g -o lib/.utop/utop.exe -output-complete-exe /Users/mac/.opam/cs3110-2023fa/lib/ocaml/compiler-libs/ocamlcommon.cma /Users/mac/.opam/cs3110-2023fa/lib/ocaml/compiler-libs/ocamlbytecomp.cma /Users/mac/.opam/cs3110-2023fa/lib/ocaml/compiler-libs/ocamltoplevel.cma /Users/mac/.opam/cs3110-2023fa/lib/findlib/findlib.cma /Users/mac/.opam/cs3110-2023fa/lib/findlib/findlib_top.cma /Users/mac/.opam/cs3110-2023fa/lib/logs/logs.cma /Users/mac/.opam/cs3110-2023fa/lib/lwt/lwt.cma /Users/mac/.opam/cs3110-2023fa/lib/logs/logs_lwt.cma /Users/mac/.opam/cs3110-2023fa/lib/ocplib-endian/ocplib_endian.cma /Users/mac/.opam/cs3110-2023fa/lib/ocplib-endian/bigstring/ocplib_endian_bigstring.cma /Users/mac/.opam/cs3110-2023fa/lib/ocaml/unix/unix.cma /Users/mac/.opam/cs3110-2023fa/lib/ocaml/threads/threads.cma /Users/mac/.opam/cs3110-2023fa/lib/lwt/unix/lwt_unix.cma -I /Users/mac/.opam/cs3110-2023fa/lib/lwt/unix /Users/mac/.opam/cs3110-2023fa/lib/react/react.cma /Users/mac/.opam/cs3110-2023fa/lib/lwt_react/lwt_react.cma /Users/mac/.opam/cs3110-2023fa/lib/result/result.cma /Users/mac/.opam/cs3110-2023fa/lib/uutf/uutf.cma /Users/mac/.opam/cs3110-2023fa/lib/uucp/uucp.cma /Users/mac/.opam/cs3110-2023fa/lib/uuseg/uuseg.cma /Users/mac/.opam/cs3110-2023fa/lib/zed/zed.cma /Users/mac/.opam/cs3110-2023fa/lib/trie/trie.cma /Users/mac/.opam/cs3110-2023fa/lib/mew/mew.cma /Users/mac/.opam/cs3110-2023fa/lib/mew_vi/mew_vi.cma /Users/mac/.opam/cs3110-2023fa/lib/lambda-term/lambda_term.cma -I /Users/mac/.opam/cs3110-2023fa/lib/lambda-term /Users/mac/.opam/cs3110-2023fa/lib/xdg/xdg.cma -I /Users/mac/.opam/cs3110-2023fa/lib/xdg /Users/mac/.opam/cs3110-2023fa/lib/utop/uTop.cma lib/Poker.cma lib/.utop/.utop.eobjs/byte/dune__exe__Utop.cmo -linkall -warn-error -31)
