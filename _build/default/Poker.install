@@ -1,0 +1,8 @@
+lib: [
+  "_build/install/default/lib/Poker/META"
+  "_build/install/default/lib/Poker/dune-package"
+  "_build/install/default/lib/Poker/opam"
+]
+doc: [
+  "_build/install/default/doc/Poker/README.md"
+]

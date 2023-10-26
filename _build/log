@@ -1,9 +1,9 @@
-# dune build
+# dune exec src/poker.exe
 # OCAMLPARAM: unset
 # Shared cache: disabled
 # Workspace root: /Users/akmatchev/Documents/Courses/CS-3110/Poker
 # Auto-detected concurrency: 8
-$ /Users/akmatchev/.opam/cs3110-2023fa/bin/ocamlc.opt -config > /var/folders/r3/zgmwdtyd1bj3kxtwrsb5sbj00000gn/T/dune_33f711_output
+$ /Users/akmatchev/.opam/cs3110-2023fa/bin/ocamlc.opt -config > /var/folders/r3/zgmwdtyd1bj3kxtwrsb5sbj00000gn/T/dune_b9a784_output
 # Dune context:
 #  { name = "default"
 #  ; kind = "default"
@@ -117,3 +117,5 @@ $ /Users/akmatchev/.opam/cs3110-2023fa/bin/ocamlc.opt -config > /var/folders/r3/
 #      ; windows_unicode = false
 #      }
 #  }
+$ (cd _build/default && /Users/akmatchev/.opam/cs3110-2023fa/bin/ocamlopt.opt -w +a-4-6-7-9-27-29-30-32..42-44-45-48-50-60-66..70 -warn-error -a+31 -g -I src/.poker.eobjs/byte -I src/.poker.eobjs/native -intf-suffix .ml -no-alias-deps -opaque -o src/.poker.eobjs/native/dune__exe__Poker.cmx -c -impl src/poker.ml)
+$ (cd _build/default && /Users/akmatchev/.opam/cs3110-2023fa/bin/ocamlopt.opt -w +a-4-6-7-9-27-29-30-32..42-44-45-48-50-60-66..70 -warn-error -a+31 -g -o src/poker.exe src/.poker.eobjs/native/dune__exe__Poker.cmx)

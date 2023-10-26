@@ -1,4 +1,4 @@
-module Cards = struct
+module Poker = struct
   type suit = Hearts | Diamonds | Clubs | Spades
   type card = { rank : int; suit : suit }
 
