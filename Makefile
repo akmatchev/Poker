@@ -24,8 +24,8 @@ finalcheck:
 	@bash check.sh final
 
 zip:
-	rm -f ngrams.zip
-	zip -r ngrams.zip . -x@exclude.lst
+	rm -f Poker.zip
+	zip -r Poker.zip . -x@exclude.lst
 
 clean:
 	dune clean
