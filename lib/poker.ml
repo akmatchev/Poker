@@ -13,16 +13,6 @@ module Poker = struct
     | "Spades" -> Some Spades
     | _ -> None
 
-  (* let rank_to_string r =
-    if r < 2 || r > 14 then None
-    else
-      match r with
-      | 11 -> Some "J"
-      | 12 -> Some "Q"
-      | 13 -> Some "K"
-      | 14 -> Some "A"
-      | n -> Some (string_of_int n) *)
-
   let suit_to_string = function
     | Hearts -> "♥"
     | Diamonds -> "♦"
@@ -77,7 +67,7 @@ module Poker = struct
         print_card rank suit;
         print_deck t
 
-  let print_full_deck = print_deck full_deck
+  (* let print_full_deck = print_deck full_deck *)
 
   let draw_card (deck : card list) : card * card list =
     match deck with

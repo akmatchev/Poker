@@ -1,8 +1,0 @@
-lib: [
-  "_build/install/default/lib/Poker/META"
-  "_build/install/default/lib/Poker/dune-package"
-  "_build/install/default/lib/Poker/opam"
-]
-bin: [
-  "_build/install/default/bin/Poker"
-]

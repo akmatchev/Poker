@@ -13,6 +13,6 @@ module Poker : sig
   val empty_deck : 'a list
   val full_deck : card list
   val print_deck : card list -> unit
-  val print_full_deck : unit
+  (* val print_full_deck : unit *)
   val draw_card : card list -> card * card list
 end
