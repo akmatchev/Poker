@@ -53,11 +53,11 @@ module Poker = struct
 
 (** many_cards_to_ascii returns a string representation of the list cards with the ascci cards side-by-side *)
 let many_cards_to_ascii cards =
-let many_cards_helper cards i =
-(List.fold_right (fun x y -> y^single_card_to_ascii i x) cards "") in
-let rec helper_two i =
-if i < 0 then "" else helper_two (i-1) ^ ("\n" ^ many_cards_helper cards i) in
-helper_two 6
+  let many_cards_helper cards i =
+    (List.fold_right (fun x y -> y^single_card_to_ascii i x) cards "") in
+    let rec helper_two i =
+    if i < 0 then "" else helper_two (i-1) ^ ("\n" ^ many_cards_helper cards i) in
+  helper_two 6
 
 
   let create_deck () =
@@ -69,17 +69,20 @@ helper_two 6
     in
     product ranks suits
 
-  let create_cards () = 
+(** create_cards returns list of cards with every combination of rank from ranks and suit from suits *)
+  let create_cards ranks suits = 
     let product l1 l2 =
       List.concat
         (List.map
            (fun e1 -> List.map (fun e2 -> { rank = e1; suit = e2 }) l2)
            l1)
     in
-    product [10; 3] [Hearts; Diamonds]
+    product ranks suits
   
-  let print_some_cards () = 
-  print_endline (many_cards_to_ascii (create_cards ()))
+  (** print_cards prints list of cards *)
+  let print_cards cards = 
+    print_endline (many_cards_to_ascii cards)
+  
   let print_card r s =
     let is_valid_rank r = r >= 2 && r <= 14 in
     let is_valid_suit s =
@@ -94,8 +97,6 @@ helper_two 6
   let empty_deck = []
   let full_deck = create_deck ()
 
-  let () = print_some_cards ()
-
   let rec print_deck = function
     | [] -> print_endline ""
     | { rank; suit } :: t ->
@@ -104,6 +105,7 @@ helper_two 6
 
   (* let print_full_deck = print_deck full_deck *)
 
+  (** draw_card returns pair of card drawn from given deck, and the original deck without drawn card *)
   let draw_card (deck : card list) : card * card list =
     match deck with
     | [] -> failwith "Empty deck, cannot draw a card"
@@ -112,4 +114,25 @@ helper_two 6
         let drawn_card = List.nth deck drawn_index in
         let rest = List.filter (fun c -> c <> drawn_card) deck in
         (drawn_card, rest)
+  
+  (** draw_cards returns pair of list of drawn cards from original deck, and the original deck without drawn cards *)
+  let rec draw_cards (deck : card list) (num : int) : card list * card list = 
+    if num > 0 then match 
+    draw_card deck with 
+    | (drawn_card, rest_deck) ->
+      match draw_cards rest_deck (num -1) with
+      | (drawn_cards, final_deck ) -> (drawn_card :: drawn_cards, final_deck)
+    else ([], deck)
+
+  (** draw_flop returns pair of 3 cards from given deck, and the original deck without a burn card and the 3 returned cards *)
+  let draw_flop (deck : card list) : (card list * card list) =
+    match draw_cards deck 4 with
+    | (a, b) -> (List.tl a, b)
+
+  let print_some_cards () =
+  let pair = (draw_flop (create_cards [12; 13; 4; 9] [Hearts; Spades; Clubs])) in
+  print_cards (fst pair);print_cards (snd pair)
+  
+
+  let () = print_some_cards ()
 end
