@@ -37,6 +37,28 @@ module Poker = struct
       \  |       %2s|\n\
       \  +---------+" (rank_to_string card.rank) (suit_to_string card.suit)
       (rank_to_string card.rank)
+  
+  (** single_card_to_ascii returns the asci text representation of the row indicated by index, with the values dictated by card *)
+  let single_card_to_ascii index card =
+  let buffer = if card.rank = 10 then "" else " " in
+  let string_rank = rank_to_string card.rank in
+  let string_suit = suit_to_string card.suit in
+  match index with
+  | 0 | 6 -> "+---------+ "
+  | 1 -> "|"^string_rank^buffer^"       | "
+  | 2 | 4 -> "|         | "
+  | 3 -> "|    "^string_suit^"    | "
+  | 5 -> "|       "^buffer^string_rank^"| "
+  | _ -> ""
+
+(** many_cards_to_ascii returns a string representation of the list cards with the ascci cards side-by-side *)
+let many_cards_to_ascii cards =
+let many_cards_helper cards i =
+(List.fold_right (fun x y -> y^single_card_to_ascii i x) cards "") in
+let rec helper_two i =
+if i < 0 then "" else helper_two (i-1) ^ ("\n" ^ many_cards_helper cards i) in
+helper_two 6
+
 
   let create_deck () =
     let product l1 l2 =
@@ -47,6 +69,17 @@ module Poker = struct
     in
     product ranks suits
 
+  let create_cards () = 
+    let product l1 l2 =
+      List.concat
+        (List.map
+           (fun e1 -> List.map (fun e2 -> { rank = e1; suit = e2 }) l2)
+           l1)
+    in
+    product [10; 3] [Hearts; Diamonds]
+  
+  let print_some_cards () = 
+  print_endline (many_cards_to_ascii (create_cards ()))
   let print_card r s =
     let is_valid_rank r = r >= 2 && r <= 14 in
     let is_valid_suit s =
@@ -60,6 +93,8 @@ module Poker = struct
 
   let empty_deck = []
   let full_deck = create_deck ()
+
+  let () = print_some_cards ()
 
   let rec print_deck = function
     | [] -> print_endline ""
