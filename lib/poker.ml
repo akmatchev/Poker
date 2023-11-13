@@ -128,6 +128,15 @@ let many_cards_to_ascii cards =
   let draw_flop (deck : card list) : (card list * card list) =
     match draw_cards deck 4 with
     | (a, b) -> (List.tl a, b)
+  
+  let draw_turn (deck : card list) : (card * card list) =
+    match draw_cards deck 2 with
+    | (_::b::_, c) -> (b, c)
+    | _ -> ({rank = 2; suit = Hearts}, [])
+  let draw_river (deck : card list) : (card * card list) =
+    match draw_cards deck 2 with
+    | (_::b::_, c) -> (b, c)
+    | _ -> ({rank = 2; suit = Hearts}, [])
 
   let print_some_cards () =
   let pair = (draw_flop (create_cards [12; 13; 4; 9] [Hearts; Spades; Clubs])) in
