@@ -1,2 +1,3 @@
 (test
- (name Poker))
+ (name main)
+ (libraries ounit2 Poker))

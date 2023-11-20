@@ -1,3 +1,7 @@
+# assignment
+poker.zip
+
+# ocaml
 *.cmo
 *.cma
 *.cmi
@@ -6,3 +10,9 @@
 *.native
 *.byte
 _build
+
+# temporary files
+*.swp
+*~
+\#*\#
+.DS_Store

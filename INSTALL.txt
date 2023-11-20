@@ -1,0 +1,4 @@
+After unzipping the files, follow these steps:
+1. Run "make build" in the terminal
+2. Run "make play" in the terminal. This will run "main.ml", which is our demo.
+3. If wishing to push to github/zip, run "dune clean" before running "make zip"
