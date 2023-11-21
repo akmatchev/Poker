@@ -11,11 +11,21 @@ type card = {
   suit : suit;
 }
 
+(**[empty] represents an empty deck of cards*)
 let empty = []
+
+(**[ranks] is a list of all possible ranks a card could have. It is used to
+   create the full_deck of cards*)
 let ranks = [ 2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14 ]
+
+(**[suits] is a list of all possible suits a card could have. It is used to
+   create the full deck of cards*)
 let suits = [ Hearts; Diamonds; Clubs; Spades ]
+
+(**[top_card] returns the card at the top of the deck*)
 let top_card d = List.hd d
 
+(**[full_deck] is an unshuffled full deck of cards*)
 let full_deck =
   let product l1 l2 =
     List.concat
@@ -23,6 +33,8 @@ let full_deck =
   in
   product ranks suits
 
+(**[shuffle_deck] shuffles the input deck of cards and returns a shuffled
+   version of given deck*)
 let shuffle_deck deck =
   Random.self_init ();
   let deck_arr = Array.of_list deck in
@@ -38,20 +50,17 @@ let shuffle_deck deck =
   done;
   Array.to_list deck_arr
 
-let suit_of_string str =
-  match String.capitalize_ascii str with
-  | "Hearts" -> Some Hearts
-  | "Diamonds" -> Some Diamonds
-  | "Clubs" -> Some Clubs
-  | "Spades" -> Some Spades
-  | _ -> None
-
+(**[suit_to_string] takes in the suit of a card. Returns: the string
+   representation of the suit. Requires: the input is of type suit*)
 let suit_to_string = function
   | Hearts -> "♥"
   | Diamonds -> "♦"
   | Clubs -> "♣"
   | Spades -> "♠"
 
+(**[rank_to_string] converts the rank of a card to a string representation.
+   Returns: the string representation of the card. Requires: the input r is 2 <=
+   r <= 14*)
 let rank_to_string = function
   | 11 -> "J"
   | 12 -> "Q"
@@ -132,8 +141,14 @@ let cards_to_ascii (deck : card list) =
 
 let print_card card = print_endline (card_to_ascii card)
 let print_cards lst = print_endline (cards_to_ascii lst)
+
+(**[draw_card] draws a card from a deck. Returns: the resulting deck. Requires:
+   the deck is nonemtpy*)
 let draw_card lst = List.tl lst
 
+(**[draw_flop] draws the flop of the current deck. Returns: a tuple of card
+   lists. The first element is the flop and the second element is the resulting
+   deck. Requires: the size of the deck is >4*)
 let draw_flop deck =
   let d1 = draw_card deck in
   let first = top_card d1 in
@@ -143,6 +158,9 @@ let draw_flop deck =
   let third = top_card d3 in
   ([ first; second; third ], draw_card d3)
 
+(**[draw_turn_river] draws the turn or river of a given round. Returns: a tuple
+   whose first element is the card drawn and the second element is the resulting
+   deck. Requires: the size of the deck is >1*)
 let draw_turn_river deck =
   let d1 = draw_card deck in
   let turn = top_card d1 in
