@@ -1,5 +1,6 @@
 open Poker
 open Cards
+open Random
 
 let royal_flush =
   [
@@ -22,9 +23,14 @@ let river_card, post_river_deck = draw_turn_river post_turn_deck
 let river = turn @ [ river_card ]
 let () = print_cards river
 
+(**[pairTester] given some pairing function f and some list of cards will print
+   out the rank of the pair of in cards if it exists, otherwise prints 0*)
 let pairTester f cards =
   print_endline (string_of_int (Option.value (f cards) ~default:0))
 
+(**[pairPairTester] given some double pairing function f and some list of cards
+   will print out the rank of the pair of in cards if it exists, otherwise
+   prints 0*)
 let pairPairTester f cards =
   let part = Option.value (f cards) ~default:(0, 0) in
   print_endline (string_of_int (fst part) ^ "," ^ string_of_int (snd part))
@@ -93,3 +99,52 @@ let simple_full_house =
   ]
 
 let () = pairPairTester full_house simple_full_house
+
+(**[makeTestPair] returns list of two cards which are a one_pair*)
+let makeTestPair () =
+  let randRank = Random.int 13 in
+  let randSuitNum = Random.int 4 in
+  let randSuit = List.nth suits randSuitNum in
+  let firs = { rank = randRank; suit = randSuit } in
+  let randSecSuit = Random.int 3 in
+  let sec =
+    {
+      rank = randRank;
+      suit = List.nth (List.filter (fun x -> x <> randSuit) suits) randSecSuit;
+    }
+  in
+  [ firs; sec ]
+
+(**[makeRankCard] returns a card from a given rank and a random suit*)
+let makeRankCard rank = { rank; suit = List.nth suits (Random.int 4) }
+
+(**[exepRand] returns random number within 1 and bound including 1 and excluding
+   bound, excluding any numbers in list exep*)
+let rec exepRand exep bound =
+  let num = Random.int bound + 1 in
+  if List.mem num exep then exepRand exep bound else num
+
+(**[randomNums] returns disinct list of numbers len long from 1 to bound
+   excluding exep and bound*)
+let rec randomNums len bound exep =
+  if len > 0 then
+    let num = exepRand exep bound in
+    num :: randomNums (len - 1) bound (num :: exep)
+  else []
+
+(**[makeTestPairHand] returns random 7 card hand with a one_pair and no other
+   pairings*)
+let makeTestPairHand () =
+  let pair = makeTestPair () in
+  let nums = randomNums 5 13 [ (List.hd pair).rank ] in
+  pair @ List.map (fun x -> makeRankCard x) nums
+
+(**[print_some_cards] compactly prints cards*)
+let print_some_cards cards =
+  let helper acc card =
+    acc ^ "(" ^ string_of_int card.rank ^ "," ^ suit_to_string card.suit ^ ")"
+  in
+  List.fold_left helper "" cards
+
+(* randomized test, goal would be to run this for large numbers *)
+let () = pairTester one_pair (makeTestPairHand ())

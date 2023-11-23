@@ -14,6 +14,8 @@ type card = {
 }
 (**Abstract type for representing a card*)
 
+val suits : suit list
+
 val empty : card list
 (**[empty] is the representation of an empty deck*)
 
@@ -44,6 +46,7 @@ val print_cards : card list -> unit
 val burn_card : card list -> card list
 (**[burn_card] burns the card from the top of the deck and returns the resulting
    deck*)
+val suit_to_string : suit -> string
 
 val one_pair : card list -> int option
 (**[one_pair] if list of cards has pair returns option of rank of pair, else option of None*)
