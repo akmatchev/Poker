@@ -55,16 +55,25 @@ let simple_three_of_a_kind =
     { rank = 6; suit = Diamonds };
   ]
 
-let () =
-  print_endline
-    (string_of_int (Option.value (one_pair simple_one_pair) ~default:0))
+let simple_four_of_a_kind =
+  [
+    { rank = 8; suit = Clubs };
+    { rank = 8; suit = Spades };
+    { rank = 3; suit = Diamonds };
+    { rank = 11; suit = Spades };
+    { rank = 5; suit = Clubs };
+    { rank = 8; suit = Hearts };
+    { rank = 8; suit = Diamonds };
+  ]
 
-let part1 = Option.value (two_pair simple_two_pair) ~default:(0, 0)
+let pairTester f cards =
+  print_endline (string_of_int (Option.value (f cards) ~default:0))
 
-let () =
-  print_endline (string_of_int (fst part1) ^ "," ^ string_of_int (snd part1))
+let pairPairTester f cards =
+  let part = Option.value (f cards) ~default:(0, 0) in
+  print_endline (string_of_int (fst part) ^ "," ^ string_of_int (snd part))
 
-let () =
-  print_endline
-    (string_of_int
-       (Option.value (three_of_kind simple_three_of_a_kind) ~default:0))
+let () = pairTester one_pair simple_one_pair
+let () = pairPairTester two_pair simple_two_pair
+let () = pairTester three_of_kind simple_three_of_a_kind
+let () = pairTester four_of_kind simple_four_of_a_kind

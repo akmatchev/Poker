@@ -50,7 +50,9 @@ val one_pair : card list -> int option
 val two_pair : card list -> (int * int) option
 (**[two_pair] if list of cards has two pair returns option of rank of both pairs pair, else option of None*)
 val three_of_kind : card list -> int option
-(**[three_of_kind] if list of cards has three of kind returns option of rank of three of kind, else option of None*)
+(**[three_of_kind] if list of cards has three of kind returns option of rank of three of a kind, else option of None*)
+val four_of_kind : card list -> int option
+(**[four_of_kind] if list of cards has three of kind returns option of rank of four of a kind, else option of None*)
 
 val draw_flop : card list -> card list * card list
 (**[drop_flop] draws a flop from the given deck of cards. It returns the three

@@ -193,6 +193,8 @@ let one_pair h =
   in
   helper h
 
+(* think of have 3 pair, which is the same as the best two pair in 7 cards *)
+
 (**[two_pair] returns rank of a two disinct pairs in list of cards if they
    exist, otherwise returns none. Returns: option tuple of rank of both pairs if
    pairs exists otherwise None.*)
@@ -209,14 +211,28 @@ let two_pair h =
       | Some b -> Some (a, b))
 
 (**[three_of_kind] returns rank of a three of kind in list of cards if they
-   exist, otherwise returns none. Returns: option tuple of rank of both pairs if
-   pairs exists otherwise None.*)
+   exist, otherwise returns none. Returns: option of rank of three of a kind if
+   it exists otherwise None.*)
 let three_of_kind h =
   let rec helper h1 =
     match h1 with
     | [] -> None
     | hd :: t -> (
         match one_pair t with
+        | None -> helper t
+        | Some a -> if hd.rank = a then Some a else helper t)
+  in
+  helper h
+
+(**[four_of_kind] returns rank of a four of kind in list of cards if they exist,
+   otherwise returns none. Returns: option of rank of four of a kind if it
+   exists otherwise None.*)
+let four_of_kind h =
+  let rec helper h1 =
+    match h1 with
+    | [] -> None
+    | hd :: t -> (
+        match three_of_kind t with
         | None -> helper t
         | Some a -> if hd.rank = a then Some a else helper t)
   in
