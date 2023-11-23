@@ -142,26 +142,91 @@ let cards_to_ascii (deck : card list) =
 let print_card card = print_endline (card_to_ascii card)
 let print_cards lst = print_endline (cards_to_ascii lst)
 
-(**[draw_card] draws a card from a deck. Returns: the resulting deck. Requires:
+(**[burn_card] draws a card from a deck. Returns: the resulting deck. Requires:
    the deck is nonemtpy*)
-let draw_card lst = List.tl lst
+let burn_card lst = List.tl lst
 
 (**[draw_flop] draws the flop of the current deck. Returns: a tuple of card
    lists. The first element is the flop and the second element is the resulting
    deck. Requires: the size of the deck is >4*)
 let draw_flop deck =
-  let d1 = draw_card deck in
+  let d1 = burn_card deck in
   let first = top_card d1 in
-  let d2 = draw_card d1 in
+  let d2 = burn_card d1 in
   let second = top_card d2 in
-  let d3 = draw_card d2 in
+  let d3 = burn_card d2 in
   let third = top_card d3 in
-  ([ first; second; third ], draw_card d3)
+  ([ first; second; third ], burn_card d3)
 
 (**[draw_turn_river] draws the turn or river of a given round. Returns: a tuple
    whose first element is the card drawn and the second element is the resulting
    deck. Requires: the size of the deck is >1*)
 let draw_turn_river deck =
-  let d1 = draw_card deck in
+  let d1 = burn_card deck in
   let turn = top_card d1 in
-  (turn, draw_card d1)
+  (turn, burn_card d1)
+
+type category =
+  | High
+  | One_Pair
+  | Two_Pair
+  | Three_Of_A_Kind
+  | Straight
+  | Flush
+  | Full_House
+  | Four_Of_A_Kind
+  | Straight_Flush
+  | Royal_Flush
+
+(**[one_pair] returns rank of a pair in list of cards if pair exists, otherwise
+   returns none. Returns: option of rank of pair if pair exists otherwise None.*)
+let one_pair h =
+  let rec helper h1 =
+    match h1 with
+    | [] -> None
+    | hd :: t -> (
+        match
+          List.find_opt (fun x -> if x.rank = hd.rank then true else false) t
+        with
+        | None -> helper t
+        | Some a -> Some a.rank)
+  in
+  helper h
+
+(**[two_pair] returns rank of a two disinct pairs in list of cards if they
+   exist, otherwise returns none. Returns: option tuple of rank of both pairs if
+   pairs exists otherwise None.*)
+let two_pair h =
+  let rankin = one_pair h in
+  match rankin with
+  | None -> None
+  | Some a -> (
+      let rest =
+        List.find_all (fun x -> if x.rank <> a then true else false) h
+      in
+      match one_pair rest with
+      | None -> None
+      | Some b -> Some (a, b))
+
+(**[three_of_kind] returns rank of a three of kind in list of cards if they
+   exist, otherwise returns none. Returns: option tuple of rank of both pairs if
+   pairs exists otherwise None.*)
+let three_of_kind h =
+  let rec helper h1 =
+    match h1 with
+    | [] -> None
+    | hd :: t -> (
+        match one_pair t with
+        | None -> helper t
+        | Some a -> if hd.rank = a then Some a else helper t)
+  in
+  helper h
+
+(**[hand_category] classifies 7-card hand as a category of poker hands and
+   returns this category. Returns: category. Requires: the size of hand is 7*)
+let hand_category h = h
+
+(**[compare_hand] compares first hand with second hand and returns -1 if h1 is
+   worse than h2, 0 if h1 = h2, 1 if h1 is better than h2. Returns: int.
+   Requires: the size of both hands are 7*)
+let compare_hand h1 h2 = h1

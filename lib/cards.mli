@@ -41,9 +41,16 @@ val print_cards : card list -> unit
 (**[print_cards] prints the ascii art representations of multiple cards
    side-by-side*)
 
-val draw_card : card list -> card list
-(**[draw_card] draws a card from the top of the deck and returns the resulting
+val burn_card : card list -> card list
+(**[burn_card] burns the card from the top of the deck and returns the resulting
    deck*)
+
+val one_pair : card list -> int option
+(**[one_pair] if list of cards has pair returns option of rank of pair, else option of None*)
+val two_pair : card list -> (int * int) option
+(**[two_pair] if list of cards has two pair returns option of rank of both pairs pair, else option of None*)
+val three_of_kind : card list -> int option
+(**[three_of_kind] if list of cards has three of kind returns option of rank of three of kind, else option of None*)
 
 val draw_flop : card list -> card list * card list
 (**[drop_flop] draws a flop from the given deck of cards. It returns the three
