@@ -224,6 +224,21 @@ let three_of_kind h =
   in
   helper h
 
+(**[full_house] returns rank of a disinct pair and three of a kind in list of
+   cards if they exist, otherwise returns none. Returns: option tuple of rank of
+   pair and three of a kind if they both exist otherwise None.*)
+let full_house h =
+  let rankin = three_of_kind h in
+  match rankin with
+  | None -> None
+  | Some a -> (
+      let rest =
+        List.find_all (fun x -> if x.rank <> a then true else false) h
+      in
+      match one_pair rest with
+      | None -> None
+      | Some b -> Some (b, a))
+
 (**[four_of_kind] returns rank of a four of kind in list of cards if they exist,
    otherwise returns none. Returns: option of rank of four of a kind if it
    exists otherwise None.*)

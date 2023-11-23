@@ -53,6 +53,8 @@ val three_of_kind : card list -> int option
 (**[three_of_kind] if list of cards has three of kind returns option of rank of three of a kind, else option of None*)
 val four_of_kind : card list -> int option
 (**[four_of_kind] if list of cards has three of kind returns option of rank of four of a kind, else option of None*)
+val full_house : card list -> (int * int) option
+(**[full_house] if list of cards has full house returns option of rank of pair and three of a kind, else option of None*)
 
 val draw_flop : card list -> card list * card list
 (**[drop_flop] draws a flop from the given deck of cards. It returns the three
