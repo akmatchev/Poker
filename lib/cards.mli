@@ -14,6 +14,8 @@ type card = {
 }
 (**Abstract type for representing a card*)
 
+val suits : suit list
+
 val empty : card list
 (**[empty] is the representation of an empty deck*)
 
@@ -44,13 +46,18 @@ val print_cards : card list -> unit
 val draw_card : card list -> card list
 (**[draw_card] draws a card from the top of the deck and returns the resulting
    deck*)
+val suit_to_string : suit -> string
 
 val one_pair : card list -> int option
 (**[one_pair] if list of cards has pair returns option of rank of pair, else option of None*)
 val two_pair : card list -> (int * int) option
 (**[two_pair] if list of cards has two pair returns option of rank of both pairs pair, else option of None*)
 val three_of_kind : card list -> int option
-(**[three_of_kind] if list of cards has three of kind returns option of rank of three of kind, else option of None*)
+(**[three_of_kind] if list of cards has three of kind returns option of rank of three of a kind, else option of None*)
+val four_of_kind : card list -> int option
+(**[four_of_kind] if list of cards has three of kind returns option of rank of four of a kind, else option of None*)
+val full_house : card list -> (int * int) option
+(**[full_house] if list of cards has full house returns option of rank of pair and three of a kind, else option of None*)
 
 val draw_flop : card list -> card list * card list
 (**[drop_flop] draws a flop from the given deck of cards. It returns the three
