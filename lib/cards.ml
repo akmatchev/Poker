@@ -142,29 +142,29 @@ let cards_to_ascii (deck : card list) =
 let print_card card = print_endline (card_to_ascii card)
 let print_cards lst = print_endline (cards_to_ascii lst)
 
-(**[burn_card] draws a card from a deck. Returns: the resulting deck. Requires:
+(**[draw_card] draws a card from a deck. Returns: the resulting deck. Requires:
    the deck is nonemtpy*)
-let burn_card lst = List.tl lst
+let draw_card lst = List.tl lst
 
 (**[draw_flop] draws the flop of the current deck. Returns: a tuple of card
    lists. The first element is the flop and the second element is the resulting
    deck. Requires: the size of the deck is >4*)
 let draw_flop deck =
-  let d1 = burn_card deck in
+  let d1 = draw_card deck in
   let first = top_card d1 in
-  let d2 = burn_card d1 in
+  let d2 = draw_card d1 in
   let second = top_card d2 in
-  let d3 = burn_card d2 in
+  let d3 = draw_card d2 in
   let third = top_card d3 in
-  ([ first; second; third ], burn_card d3)
+  ([ first; second; third ], draw_card d3)
 
 (**[draw_turn_river] draws the turn or river of a given round. Returns: a tuple
    whose first element is the card drawn and the second element is the resulting
    deck. Requires: the size of the deck is >1*)
 let draw_turn_river deck =
-  let d1 = burn_card deck in
+  let d1 = draw_card deck in
   let turn = top_card d1 in
-  (turn, burn_card d1)
+  (turn, draw_card d1)
 
 type category =
   | High

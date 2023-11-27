@@ -1,4 +1,4 @@
-(**This module is the representation type for cards and different actions one
+(**This file is the representation type for cards and different actions one
    can take with a deck of cards*)
 
 (**Type for representing the suit of a card*)
@@ -41,8 +41,8 @@ val print_cards : card list -> unit
 (**[print_cards] prints the ascii art representations of multiple cards
    side-by-side*)
 
-val burn_card : card list -> card list
-(**[burn_card] burns the card from the top of the deck and returns the resulting
+val draw_card : card list -> card list
+(**[draw_card] draws a card from the top of the deck and returns the resulting
    deck*)
 
 val one_pair : card list -> int option
