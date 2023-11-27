@@ -1,4 +1,5 @@
 open Cards
+open Player
 
 type category =
   | High of {
@@ -42,6 +43,18 @@ type category =
     }
   | Straight_Flush of { hcard : int }
   | Royal_Flush
+
+let category_to_string = function
+  | High_Card -> "High_Card"
+  | One_Pair -> "One_Pair"
+  | Two_Pair -> "Two_Pair"
+  | Three_Of_A_Kind -> "Three_Of_A_Kind"
+  | Straight -> "Straight"
+  | Flush -> "Flush"
+  | Full_House -> "Full_House"
+  | Four_Of_A_Kind -> "Four_Of_A_Kind"
+  | Straight_Flush -> "Straight_Flush"
+  | Royal_Flush -> "Royal_Flush"
 
 let compare_by_rank card1 card2 = compare card1.rank card2.rank
 let sort_by_rank (hand : card list) = List.rev (List.sort compare_by_rank hand)
@@ -347,34 +360,8 @@ let best_player_hand (board : card list) (player_hand : card list) : category =
           if compare_hands hand1 hand2 < 0 then hand2 else hand1)
         c1 rest
 
-let best_hand (board : card list) (player1 : 'a) (player2 : 'a) =
-  failwith "Unimplemented"
-
-(* (**[one_pair_draft] returns rank of a pair in list of cards if pair exists,
-   otherwise returns none. Returns: option of rank of pair if pair exists
-   otherwise None.*) let one_pair_draft h = let rec helper h1 = match h1 with |
-   [] -> None | hd :: t -> ( match List.find_opt (fun x -> if x.rank = hd.rank
-   then true else false) t with | None -> helper t | Some a -> Some a.rank) in
-   helper h
-
-   (**[two_pair_draft] returns rank of a two disinct pairs in list of cards if
-   they exist, otherwise returns none. Returns: option tuple of rank of both
-   pairs if pairs exists otherwise None.*) let two_pair_draft h = let rankin =
-   one_pair_draft h in match rankin with | None -> None | Some a -> ( let rest =
-   List.find_all (fun x -> if x.rank <> a then true else false) h in match
-   one_pair_draft rest with | None -> None | Some b -> Some (a, b))
-
-   (**[three_of_kind_draft] returns rank of a three of kind in list of cards if
-   they exist, otherwise returns none. Returns: option tuple of rank of both
-   pairs if pairs exists otherwise None.*) let three_of_kind_draft h = let rec
-   helper h1 = match h1 with | [] -> None | hd :: t -> ( match one_pair_draft t
-   with | None -> helper t | Some a -> if hd.rank = a then Some a else helper t)
-   in helper h
-
-   (**[hand_category] classifies 7-card hand as a category of poker hands and
-   returns this category. Returns: category. Requires: the size of hand is 7*)
-   let hand_category h = h
-
-   (**[compare_hand] compares first hand with second hand and returns -1 if h1
-   is worse than h2, 0 if h1 = h2, 1 if h1 is better than h2. Returns: int.
-   Requires: the size of both hands are 7*) let compare_hand h1 h2 = h1 *)
+let better_hand (board : card list) (player1 : player) (player2 : player) : int
+    =
+  let player1_hand = best_player_hand board player1.hand in
+  let player2_hand = best_player_hand board player2.hand in
+  compare_hands player1_hand player2_hand

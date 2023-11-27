@@ -1,5 +1,6 @@
 open Poker
 open Cards
+open Hands
 open Random
 open OUnit2
 
@@ -155,7 +156,7 @@ let category_tests =
       assert_equal
         ~printer:(fun x -> x)
         "One_Pair"
-        (category_to_string (hand_category (makeTestPairHand ()))) );
+        (Cards.category_to_string (hand_category (makeTestPairHand ()))) );
   ]
 
 let suite = "test suite" >::: List.flatten [ category_tests ]
