@@ -1,6 +1,7 @@
 open Poker
 open Cards
 open Random
+open OUnit2
 
 let royal_flush =
   [
@@ -145,6 +146,20 @@ let print_some_cards cards =
     acc ^ "(" ^ string_of_int card.rank ^ "," ^ suit_to_string card.suit ^ ")"
   in
   List.fold_left helper "" cards
+
+let category_tests =
+  [
+    ( "the elements in the to_list are in order from the least key to the \
+       greatest"
+    >:: fun _ ->
+      assert_equal
+        ~printer:(fun x -> x)
+        "One_Pair"
+        (category_to_string (hand_category (makeTestPairHand ()))) );
+  ]
+
+let suite = "test suite" >::: List.flatten [ category_tests ]
+let _ = run_test_tt_main suite
 
 (* randomized test, goal would be to run this for large numbers *)
 let () = pairTester one_pair (makeTestPairHand ())

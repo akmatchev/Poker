@@ -14,6 +14,19 @@ type card = {
 }
 (**Abstract type for representing a card*)
 
+(**Type for representing the category of a poker hand*)
+type category =
+  | High_Card
+  | One_Pair
+  | Two_Pair
+  | Three_Of_A_Kind
+  | Straight
+  | Flush
+  | Full_House
+  | Four_Of_A_Kind
+  | Straight_Flush
+  | Royal_Flush
+
 val suits : suit list
 
 val empty : card list
@@ -58,6 +71,10 @@ val four_of_kind : card list -> int option
 (**[four_of_kind] if list of cards has three of kind returns option of rank of four of a kind, else option of None*)
 val full_house : card list -> (int * int) option
 (**[full_house] if list of cards has full house returns option of rank of pair and three of a kind, else option of None*)
+val category_to_string : category -> string
+
+val hand_category : card list -> category
+(**[hand_category] returns the category of hand from a 7 card hand*)
 
 val draw_flop : card list -> card list * card list
 (**[drop_flop] draws a flop from the given deck of cards. It returns the three

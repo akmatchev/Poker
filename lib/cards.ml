@@ -167,7 +167,7 @@ let draw_turn_river deck =
   (turn, burn_card d1)
 
 type category =
-  | High
+  | High_Card
   | One_Pair
   | Two_Pair
   | Three_Of_A_Kind
@@ -255,7 +255,36 @@ let four_of_kind h =
 
 (**[hand_category] classifies 7-card hand as a category of poker hands and
    returns this category. Returns: category. Requires: the size of hand is 7*)
-let hand_category h = h
+let hand_category h =
+  match four_of_kind h with
+  | None -> (
+      match full_house h with
+      | None -> (
+          match three_of_kind h with
+          | None -> (
+              match two_pair h with
+              | None -> (
+                  match one_pair h with
+                  | None -> High_Card
+                  | Some _ -> One_Pair)
+              | Some _ -> Two_Pair)
+          | Some _ -> Three_Of_A_Kind)
+      | Some _ -> Full_House)
+  | Some _ -> Four_Of_A_Kind
+
+(**[category_to_string] takes in the poker hand category. Returns: the string
+   representation of the category. Requires: the input is of type category*)
+let category_to_string = function
+  | High_Card -> "High_Card"
+  | One_Pair -> "One_Pair"
+  | Two_Pair -> "Two_Pair"
+  | Three_Of_A_Kind -> "Three_Of_A_Kind"
+  | Straight -> "Straight"
+  | Flush -> "Flush"
+  | Full_House -> "Full_House"
+  | Four_Of_A_Kind -> "Four_Of_A_Kind"
+  | Straight_Flush -> "Straight_Flush"
+  | Royal_Flush -> "Royal_Flush"
 
 (**[compare_hand] compares first hand with second hand and returns -1 if h1 is
    worse than h2, 0 if h1 = h2, 1 if h1 is better than h2. Returns: int.
