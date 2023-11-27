@@ -29,7 +29,7 @@ let rec demo deck () =
         let drawn_card = top_card deck in
         print_endline "You drew the following card:";
         print_card drawn_card;
-        r_deck := draw_card deck;
+        r_deck := burn_card deck;
         demo !r_deck ()
   | "no" | "n" -> (
       print_endline "Okay, maybe next time!";
