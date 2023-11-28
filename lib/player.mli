@@ -1,7 +1,7 @@
 open Cards
 
 type player = {
-  id : int;
+  name : string;
   hand : card list;
   chips : int;
 }

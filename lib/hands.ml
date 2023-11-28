@@ -45,23 +45,29 @@ type category =
   | Royal_Flush
 
 let category_to_string = function
-  | High_Card -> "High_Card"
-  | One_Pair -> "One_Pair"
-  | Two_Pair -> "Two_Pair"
-  | Three_Of_A_Kind -> "Three_Of_A_Kind"
-  | Straight -> "Straight"
-  | Flush -> "Flush"
-  | Full_House -> "Full_House"
-  | Four_Of_A_Kind -> "Four_Of_A_Kind"
-  | Straight_Flush -> "Straight_Flush"
+  | High _ -> "High_Card"
+  | One_Pair _ -> "One_Pair"
+  | Two_Pair _ -> "Two_Pair"
+  | Three_Of_A_Kind _ -> "Three_Of_A_Kind"
+  | Straight _ -> "Straight"
+  | Flush _ -> "Flush"
+  | Full_House _ -> "Full_House"
+  | Four_Of_A_Kind _ -> "Four_Of_A_Kind"
+  | Straight_Flush _ -> "Straight_Flush"
   | Royal_Flush -> "Royal_Flush"
 
-let compare_by_rank card1 card2 = compare card1.rank card2.rank
-let sort_by_rank (hand : card list) = List.rev (List.sort compare_by_rank hand)
-let cards_to_ranks (hand : card list) = List.map (fun card -> card.rank) hand
+let compare_by_rank (card1 : card) (card2 : card) : int =
+  compare card1.rank card2.rank
+
+let sort_by_rank (hand : card list) : card list =
+  List.rev (List.sort compare_by_rank hand)
+
+let cards_to_ranks (hand : card list) : int list =
+  List.map (fun card -> card.rank) hand
 
 (* Function that gets all the possible hands on the board a player could have *)
-let card_combinations (board : card list) (player_hand : card list) =
+let card_combinations (board : card list) (player_hand : card list) :
+    card list list =
   let rec combinations k lst =
     if k = 0 then [ [] ]
     else
@@ -76,17 +82,18 @@ let card_combinations (board : card list) (player_hand : card list) =
   in
   combinations 5 (board @ player_hand)
 
-let flush_checker (hand : card list) =
+let flush_checker (hand : card list) : bool =
   let rec flush_helper = function
     | [] | [ _ ] -> true
     | h :: (h2 :: t1 as t) -> if h.suit = h2.suit then flush_helper t else false
   in
   flush_helper hand
 
+(*Requires: size of hand >= 1*)
 let straight_checker (hand : card list) : int =
   let sorted_hand = sort_by_rank hand in
   let sorted_hand_ranks = cards_to_ranks sorted_hand in
-  if sorted_hand_ranks = [ 14; 5; 4; 3; 2 ] then 100
+  if sorted_hand_ranks = [ 14; 5; 4; 3; 2 ] then -100
   else
     let rec is_d_sequence = function
       | [] | [ _ ] -> true
@@ -106,7 +113,13 @@ let is_royal_flush (hand : card list) : category option =
 let is_straight_flush (hand : card list) : category option =
   if flush_checker hand && is_royal_flush hand = None then
     let checker = straight_checker hand in
-    if checker = 0 then None else Some (Straight_Flush { hcard = checker })
+    if checker = 0 then None
+    else
+      let sorted_hand = sort_by_rank hand in
+      let sorted_hand_ranks = cards_to_ranks sorted_hand in
+      if sorted_hand_ranks = [ 14; 5; 4; 3; 2 ] then
+        Some (Straight_Flush { hcard = -100 })
+      else Some (Straight_Flush { hcard = checker })
   else None
 
 let is_four_of_kind (hand : card list) : category option =
@@ -124,7 +137,7 @@ let is_full_house (hand : card list) : category option =
   | [ a; b; c; d; e ] when a.rank = b.rank && b.rank = c.rank && d.rank = e.rank
     -> Some (Full_House { three_kind = a.rank; pair = d.rank })
   | [ a; b; c; d; e ] when a.rank = b.rank && c.rank = d.rank && d.rank = e.rank
-    -> Some (Full_House { three_kind = c.rank; pair = d.rank })
+    -> Some (Full_House { three_kind = c.rank; pair = a.rank })
   | _ -> None
 
 let is_flush (hand : card list) : category option =
@@ -139,12 +152,17 @@ let is_flush (hand : card list) : category option =
 
 let is_straight (hand : card list) : category option =
   if straight_checker hand <> 0 && is_straight_flush hand = None then
-    let top = List.hd (sort_by_rank hand) in
-    Some (Straight { hcard = top.rank })
+    let sorted_hand = sort_by_rank hand in
+    let sorted_hand_ranks = cards_to_ranks sorted_hand in
+    if sorted_hand_ranks = [ 14; 5; 4; 3; 2 ] then
+      Some (Straight { hcard = -100 })
+    else
+      let top = List.hd sorted_hand in
+      Some (Straight { hcard = top.rank })
   else None
 
 let is_three_of_kind (hand : card list) : category option =
-  if is_four_of_kind hand = None then
+  if is_four_of_kind hand = None && is_full_house hand = None then
     let sorted_hand = sort_by_rank hand in
     match sorted_hand with
     | [ a; b; c; d; e ] when a.rank = b.rank && b.rank = c.rank ->
@@ -224,20 +242,32 @@ let is_pair (hand : card list) : category option =
     | _ -> None
   else None
 
-let high_card (hand : card list) : category option =
-  let sorted_hand = sort_by_rank hand in
-  match sorted_hand with
-  | [ a; b; c; d; e ] ->
-      Some
-        (High
-           {
-             hcard1 = a.rank;
-             hcard2 = b.rank;
-             hcard3 = c.rank;
-             hcard4 = d.rank;
-             hcard5 = e.rank;
-           })
-  | _ -> None
+let is_high_card (hand : card list) : category option =
+  if
+    is_royal_flush hand = None
+    && is_straight_flush hand = None
+    && is_four_of_kind hand = None
+    && is_full_house hand = None
+    && is_flush hand = None
+    && is_straight hand = None
+    && is_three_of_kind hand = None
+    && is_two_pair hand = None
+    && is_pair hand = None
+  then
+    let sorted_hand = sort_by_rank hand in
+    match sorted_hand with
+    | [ a; b; c; d; e ] ->
+        Some
+          (High
+             {
+               hcard1 = a.rank;
+               hcard2 = b.rank;
+               hcard3 = c.rank;
+               hcard4 = d.rank;
+               hcard5 = e.rank;
+             })
+    | _ -> None
+  else None
 
 let hand_category (hand : card list) : category =
   match is_royal_flush hand with
@@ -267,7 +297,7 @@ let hand_category (hand : card list) : category =
                                   match is_pair hand with
                                   | Some p -> p
                                   | None -> (
-                                      match high_card hand with
+                                      match is_high_card hand with
                                       | Some high -> high
                                       | None -> failwith "Imposible")))))))))
 
@@ -359,6 +389,9 @@ let best_player_hand (board : card list) (player_hand : card list) : category =
         (fun hand1 hand2 ->
           if compare_hands hand1 hand2 < 0 then hand2 else hand1)
         c1 rest
+
+let print_best_player_hand (board : card list) (player : player) : unit =
+  print_endline (category_to_string (best_player_hand board player.hand))
 
 let better_hand (board : card list) (player1 : player) (player2 : player) : int
     =

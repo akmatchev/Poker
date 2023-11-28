@@ -1,17 +1,20 @@
 open Cards
 
 type player = {
-  id : int;
+  name : string;
   hand : card list;
   chips : int;
 }
 
+let deal_to_player card player =
+  { name = player.name; hand = card :: player.hand; chips = player.chips }
+
 (** [create_player id hand chips] creates a new player with the given [id],
     initial [hand], and starting number of [chips]. *)
-let create_player id hand chips = { id; hand; chips }
+let create_player name hand chips = { name; hand; chips }
 
-(** [get_player_id player] returns the ID of the given [player]. *)
-let get_player_id player = player.id
+(** [get_player_id player] returns the name of the given [player]. *)
+let get_player_id player = player.name
 
 (** [get_player_hand player] returns the hand of the given [player]. *)
 let get_player_hand player = player.hand
