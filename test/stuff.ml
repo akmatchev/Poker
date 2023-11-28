@@ -86,7 +86,7 @@
    let helper acc card = acc ^ "(" ^ string_of_int card.rank ^ "," ^
    suit_to_string card.suit ^ ")" in List.fold_left helper "" cards
 
-   let category_tests = [ ( "the elements in the to_list are in order from
+   let category_tests = [ ( "the elements in the to_list are in order from\n\ \
    the\n\ \ least key to the greatest" >:: fun _ -> assert_equal ~printer:(fun x
    -> x) "One_Pair" (Cards.category_to_string (hand_category (makeTestPairHand
    ()))) ); ]

@@ -44,6 +44,8 @@ type category =
   | Straight_Flush of { hcard : int }
   | Royal_Flush
 
+(**[category_to_string] converts a category to its string representation.
+   Returns: the string of a category. Requires: input is a valid category*)
 let category_to_string = function
   | High _ -> "High_Card"
   | One_Pair _ -> "One_Pair"
@@ -56,16 +58,28 @@ let category_to_string = function
   | Straight_Flush _ -> "Straight_Flush"
   | Royal_Flush -> "Royal_Flush"
 
+(**[compare_by_rank] compares cards by their rank. Returns a negative integer if
+   [card1]'s rank is less than [card2]'s rank, 0 is [card1]'s rank is equal to
+   [card2]'s rank, and a positive integer is [card1]'s rank is greater than
+   [card2]'s rank. Requires: [card1] and [card2] are valid cards*)
 let compare_by_rank (card1 : card) (card2 : card) : int =
   compare card1.rank card2.rank
 
+(**[sort_by_rank] sorts card by their rank in descending order. Returns: a
+   sorted list of cards by rank in descending order. Requires: cards have a
+   valid rank*)
 let sort_by_rank (hand : card list) : card list =
   List.rev (List.sort compare_by_rank hand)
 
+(**[cards_to_ranks] converts a list of cards to a list of their respective
+   ranks. Returns: a list of ranks of cards*)
 let cards_to_ranks (hand : card list) : int list =
   List.map (fun card -> card.rank) hand
 
-(* Function that gets all the possible hands on the board a player could have *)
+(**[card_combinations] lists all possible 5-card hands a player can achieve
+   given the [board] and [player_hand]. Returns: a list of all possible 5-card
+   combinations. Requires: [board] and [player_hand] do not contain any
+   duplicated cards*)
 let card_combinations (board : card list) (player_hand : card list) :
     card list list =
   let rec combinations k lst =
@@ -82,6 +96,8 @@ let card_combinations (board : card list) (player_hand : card list) :
   in
   combinations 5 (board @ player_hand)
 
+(**[flush_checker] checks if a hand is a flush. Returns: true is a flush on the
+   hand exists*)
 let flush_checker (hand : card list) : bool =
   let rec flush_helper = function
     | [] | [ _ ] -> true
@@ -89,7 +105,8 @@ let flush_checker (hand : card list) : bool =
   in
   flush_helper hand
 
-(*Requires: size of hand >= 1*)
+(**[straight_checker] checks if a hand is a straight. Requires: [hand] is a
+   valid hand*)
 let straight_checker (hand : card list) : int =
   let sorted_hand = sort_by_rank hand in
   let sorted_hand_ranks = cards_to_ranks sorted_hand in
@@ -101,6 +118,9 @@ let straight_checker (hand : card list) : int =
     in
     if is_d_sequence sorted_hand_ranks then List.hd sorted_hand_ranks else 0
 
+(**[is_royal_flush] determines whether a hand is a royal flush. Returns: Some
+   Royal_Flush if a hand is a royal flush, None otherwise. Requires: [hand] is a
+   valid hand*)
 let is_royal_flush (hand : card list) : category option =
   if flush_checker hand then
     let lst = [ 14; 13; 12; 11; 10 ] in
@@ -110,6 +130,9 @@ let is_royal_flush (hand : card list) : category option =
     if lst = sorted_hand_ranks then Some Royal_Flush else None
   else None
 
+(**[is_straight_flush] determines whether a hand is a straight flush. Returns:
+   Some Straight_Flush (hcard1) where (hcard1) is the highest ranked card in the
+   hand. Requires: [hand] is a valid hand*)
 let is_straight_flush (hand : card list) : category option =
   if flush_checker hand && is_royal_flush hand = None then
     let checker = straight_checker hand in
@@ -122,6 +145,11 @@ let is_straight_flush (hand : card list) : category option =
       else Some (Straight_Flush { hcard = checker })
   else None
 
+(**[is_four_of_kind] determines whether a hand is a four of a kind. Returns:
+   Some Four_Of_A_Kind (four_kind; hcard) is the hand is a four of a kind, where
+   four_kind is the rank of the four of a kind, and hcard is the rank of the
+   card not included in the four of a kind, and None otherwise. Requires: [hand]
+   is a valid hand*)
 let is_four_of_kind (hand : card list) : category option =
   let sorted_hand = sort_by_rank hand in
   match sorted_hand with
@@ -131,6 +159,10 @@ let is_four_of_kind (hand : card list) : category option =
     -> Some (Four_Of_A_Kind { four_kind = b.rank; hcard = a.rank })
   | _ -> None
 
+(**[is_full_house] determines whether a hand is a full house. Returns: Some
+   Full_House (three_kind; pair) is the hand is a full house, where three_kind
+   is the rank of the three of a kind, and pair is the rank of the pair in the
+   full house, and None otherwise. Requires: [hand] is a valid hand*)
 let is_full_house (hand : card list) : category option =
   let sorted_hand = sort_by_rank hand in
   match sorted_hand with
@@ -140,6 +172,10 @@ let is_full_house (hand : card list) : category option =
     -> Some (Full_House { three_kind = c.rank; pair = a.rank })
   | _ -> None
 
+(**[is_flush] determines if a hand is at best a flush. Returns: Some Flush
+   (hcard1; hcard2; hcard3; hcard4; hcard5) is the hand is a flush, where hcard1
+   -> hcard5 are the ranks of the cards in descending order, and None otherwise.
+   Requires: [hand] is a valid hand*)
 let is_flush (hand : card list) : category option =
   if flush_checker hand = true && is_straight_flush hand = None then
     let sorted_hand_ranks = cards_to_ranks (sort_by_rank hand) in
@@ -150,6 +186,10 @@ let is_flush (hand : card list) : category option =
     | _ -> None
   else None
 
+(**[is_straight] determines if a hand is at best a straight. Returns: Some
+   Straight (hcard) if the hand is a straight, where hcard is the rank of the
+   highest card that is part of the straight, and None otherwise. Requires:
+   [hand] is a valid hand*)
 let is_straight (hand : card list) : category option =
   if straight_checker hand <> 0 && is_straight_flush hand = None then
     let sorted_hand = sort_by_rank hand in
@@ -161,6 +201,11 @@ let is_straight (hand : card list) : category option =
       Some (Straight { hcard = top.rank })
   else None
 
+(**[is_three_of_kind] determines if a hand is at best a three of a kind hand.
+   Returns: Some Three_Of_A_Kind (three_kind; hcard1; hcard2) if the hand is a
+   three of a kind, where three_kind is the rank of the cards that form the
+   three of a kind, and hcard1, hcard2 are the ranks of the remaining cards in
+   descending order. Requires: [hand] is a valid hand*)
 let is_three_of_kind (hand : card list) : category option =
   if is_four_of_kind hand = None && is_full_house hand = None then
     let sorted_hand = sort_by_rank hand in
@@ -180,6 +225,11 @@ let is_three_of_kind (hand : card list) : category option =
     | _ -> None
   else None
 
+(**[is_two_pair] determines if a hand is at best a two pair hand. Returns Some
+   Two_Pair (pair1; pair2; hcard) if the hand is a two pair, where pair1 is the
+   rank of the pair with the higher rank, pair2 is the pair with the lower rank,
+   and hcard is the rank of the remaining card, and None otherwise. Requires:
+   [hand] is a valid hand*)
 let is_two_pair (hand : card list) : category option =
   if is_full_house hand = None then
     let sorted_hand = sort_by_rank hand in
@@ -193,7 +243,11 @@ let is_two_pair (hand : card list) : category option =
     | _ -> None
   else None
 
-(* Function to check if a hand is a pair *)
+(**[is_pair] determines if a hand is at best a pair hand. Returns: Some One_Pair
+   (pair; hcard1; hcard2; hcard3) if the hand is a pair, where pair is the rank
+   of the pair, hcard1 -> hcard3 are the ranks of the remaining cards in
+   descending order, and returns None otherwise. Requires: [hand] is a valid
+   hand*)
 let is_pair (hand : card list) : category option =
   if
     is_four_of_kind hand = None
@@ -242,6 +296,10 @@ let is_pair (hand : card list) : category option =
     | _ -> None
   else None
 
+(**[is_high_card] determines if a hand is at bet a high card hand. Returns: Some
+   (hcard1; hcard2; hcard3; hcard4; hcard5), where hcard1 -> hcard5 are the
+   ranks of the cards in descending order, and None otherwise. Requires: [hand]
+   is a valid hand *)
 let is_high_card (hand : card list) : category option =
   if
     is_royal_flush hand = None
@@ -269,6 +327,8 @@ let is_high_card (hand : card list) : category option =
     | _ -> None
   else None
 
+(**[hand_category] determines what type of category a hand is. Returns: the
+   category that a hand is. Requires: [hand] is a valid hand*)
 let hand_category (hand : card list) : category =
   match is_royal_flush hand with
   | Some rf -> rf
@@ -301,6 +361,9 @@ let hand_category (hand : card list) : category =
                                       | Some high -> high
                                       | None -> failwith "Imposible")))))))))
 
+(**[compare_hands] is a comparison function for hands. Returns: a negative
+   integer if [h1] is worse than [h2], 0 is [h1] is equal to [h2] and a positive
+   integer if [h1] is better than [h2]*)
 let compare_hands (h1 : category) (h2 : category) : int =
   match (h1, h2) with
   | Royal_Flush, Royal_Flush -> 0
@@ -376,10 +439,19 @@ let compare_hands (h1 : category) (h2 : category) : int =
         else hc2
       else hc1
 
+(**[possible_hands] is a list of all possible 5 card hands a player can achieve
+   given the board and the player's hand. Returns: a list of hand categories
+   that correspond to all of the different types of categories of hands a player
+   can make with the give [board] and their [player_hand]. Requires: [board] and
+   [player_hand] are valid boards and two card hands (no overlap/duplicates) *)
 let possible_hands (board : card list) (player_hand : card list) : category list
     =
   List.map hand_category (card_combinations board player_hand)
 
+(**[best_player_hand] is the best possible hand category a player can achieve
+   given the board and the player's hand. Returns: the best possible category a
+   player can achieve. Requires: [board] and [player_hand] are valid boards and
+   two card hands (no overlap/duplicates)*)
 let best_player_hand (board : card list) (player_hand : card list) : category =
   let pos_hands = possible_hands board player_hand in
   match pos_hands with
@@ -390,8 +462,17 @@ let best_player_hand (board : card list) (player_hand : card list) : category =
           if compare_hands hand1 hand2 < 0 then hand2 else hand1)
         c1 rest
 
+(**[print_best_player_hand] prints the best possible 5-card hand category a
+   player has. Requires: [board] and [player_hand] are valid boards and two card
+   hands (no overlap/duplicates)*)
 let print_best_player_hand (board : card list) (player : player) : unit =
   print_endline (category_to_string (best_player_hand board player.hand))
+
+(**[better_hand] compares which player has the better hand in a given game of
+   poker. Returns: a negative integer if [player1] has a worse hand than
+   [player2], 0 if their hands are equal, and 1 if [player1] has a better hand
+   than [player2]. Requires: [board] and [player_hand] are valid boards and two
+   card hands (no overlap/duplicates)*)
 
 let better_hand (board : card list) (player1 : player) (player2 : player) : int
     =
