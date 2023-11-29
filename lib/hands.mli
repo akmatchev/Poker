@@ -117,6 +117,6 @@ val print_best_player_hand : card list -> player -> unit
 (**[print_best_player_hand] prints the best possible 5-card hand category a
    player has*)
 
-val better_hand : card list -> player -> player -> int
-(**[better_hand] compares which player has the better hand in a given game of
+val best_hand : card list -> player -> player -> player option
+(**[best_hand] compares which player has the better hand in a given game of
    poker*)

@@ -345,6 +345,151 @@ let hand_category_tests =
       assert_equal Royal_Flush (hand_category royal_flush) );
   ]
 
+let board1 =
+  [
+    { rank = 12; suit = Spades };
+    { rank = 14; suit = Clubs };
+    { rank = 6; suit = Clubs };
+    { rank = 2; suit = Clubs };
+    { rank = 5; suit = Clubs };
+  ]
+
+let board2 = [ card1; card2; card3; card4 ]
+
+let board3 =
+  [
+    { rank = 6; suit = Hearts };
+    { rank = 2; suit = Hearts };
+    { rank = 6; suit = Clubs };
+    { rank = 2; suit = Clubs };
+    { rank = 5; suit = Clubs };
+  ]
+
+let board4 =
+  [
+    { rank = 14; suit = Hearts };
+    { rank = 10; suit = Clubs };
+    { rank = 11; suit = Diamonds };
+    { rank = 8; suit = Spades };
+    { rank = 12; suit = Diamonds };
+  ]
+
+let board5 =
+  [
+    { rank = 11; suit = Spades };
+    { rank = 11; suit = Diamonds };
+    { rank = 4; suit = Clubs };
+    { rank = 4; suit = Hearts };
+    { rank = 7; suit = Spades };
+  ]
+
+let player_hand1 =
+  [ { rank = 10; suit = Hearts }; { rank = 4; suit = Diamonds } ]
+
+let player_hand2 = [ { rank = 6; suit = Hearts }; { rank = 8; suit = Hearts } ]
+
+let player_hand3 =
+  [ { rank = 2; suit = Diamonds }; { rank = 5; suit = Diamonds } ]
+
+let player_hand4 =
+  [ { rank = 6; suit = Diamonds }; { rank = 6; suit = Spades } ]
+
+let player_hand5 =
+  [ { rank = 3; suit = Diamonds }; { rank = 4; suit = Diamonds } ]
+
+let player_hand6 = [ { rank = 3; suit = Clubs }; { rank = 4; suit = Diamonds } ]
+
+let player_hand7 =
+  [ { rank = 11; suit = Clubs }; { rank = 12; suit = Diamonds } ]
+
+let player_hand8 = [ { rank = 3; suit = Clubs }; { rank = 4; suit = Clubs } ]
+let player_hand9 = [ { rank = 2; suit = Hearts }; { rank = 8; suit = Clubs } ]
+
+let player_hand10 =
+  [ { rank = 2; suit = Spades }; { rank = 14; suit = Spades } ]
+
+let player_hand11 = [ { rank = 2; suit = Spades }; { rank = 3; suit = Spades } ]
+
+let best_player_hand_tests =
+  [
+    ( "best_player_hand test 1: high card" >:: fun _ ->
+      assert_equal
+        (High { hcard1 = 14; hcard2 = 12; hcard3 = 10; hcard4 = 6; hcard5 = 5 })
+        (best_player_hand board1 player_hand1) );
+    ( "best_player_hand test 2: pair" >:: fun _ ->
+      assert_equal
+        (One_Pair { pair = 6; hcard1 = 14; hcard2 = 12; hcard3 = 8 })
+        (best_player_hand board1 player_hand2) );
+    ( "best_player_hand test 3: two pair" >:: fun _ ->
+      assert_equal
+        (Two_Pair { pair1 = 5; pair2 = 2; hcard = 14 })
+        (best_player_hand board1 player_hand3) );
+    ( "best_player_hand test 4: three of a kind" >:: fun _ ->
+      assert_equal
+        (Three_Of_A_Kind { three_kind = 6; hcard1 = 14; hcard2 = 12 })
+        (best_player_hand board1 player_hand4) );
+    ( "best_player_hand test 5: straight" >:: fun _ ->
+      assert_equal
+        (Straight { hcard = 6 })
+        (best_player_hand board1 player_hand5) );
+    ( "best_player_hand test 6: flush" >:: fun _ ->
+      assert_equal
+        (Flush { hcard1 = 14; hcard2 = 6; hcard3 = 5; hcard4 = 3; hcard5 = 2 })
+        (best_player_hand board1 player_hand6) );
+    ( "best_player_hand test 7: full house" >:: fun _ ->
+      assert_equal
+        (Full_House { three_kind = 11; pair = 12 })
+        (best_player_hand board2 player_hand7) );
+    ( "best_player_hand test 8: four of a kind" >:: fun _ ->
+      assert_equal
+        (Four_Of_A_Kind { four_kind = 6; hcard = 5 })
+        (best_player_hand board3 player_hand4) );
+    ( "best_player_hand test 9: straight flush" >:: fun _ ->
+      assert_equal
+        (Straight_Flush { hcard = 6 })
+        (best_player_hand board1 player_hand8) );
+    ( "best_player_hand test 10: royal flush" >:: fun _ ->
+      assert_equal Royal_Flush (best_player_hand royal_flush player_hand4) );
+  ]
+
+let player1 = { name = "Player1"; hand = player_hand1; chips = 100 }
+let player2 = { name = "Player2"; hand = player_hand2; chips = 100 }
+let player3 = { name = "Player3"; hand = player_hand3; chips = 100 }
+let player4 = { name = "Player4"; hand = player_hand4; chips = 100 }
+let player5 = { name = "Player5"; hand = player_hand5; chips = 100 }
+let player6 = { name = "Player6"; hand = player_hand6; chips = 100 }
+let player7 = { name = "Player7"; hand = player_hand7; chips = 100 }
+let player8 = { name = "Player8"; hand = player_hand8; chips = 100 }
+let player9 = { name = "Player9"; hand = player_hand9; chips = 100 }
+let player10 = { name = "Player10"; hand = player_hand10; chips = 100 }
+let player11 = { name = "Player11"; hand = player_hand11; chips = 100 }
+
+let best_hand_tests =
+  [
+    ( "best hand test 1: better high card" >:: fun _ ->
+      assert_equal (Some player7) (best_hand board3 player1 player7) );
+    ( "best hand test 2: better high card input switch" >:: fun _ ->
+      assert_equal (Some player7) (best_hand board3 player7 player1) );
+    ( "best hand test 3: equal high card" >:: fun _ ->
+      assert_equal None (best_hand board4 player3 player6) );
+    ( "best hand test 4: pair vs high card" >:: fun _ ->
+      assert_equal (Some player2) (best_hand board1 player2 player1) );
+    ( "best hand test 5: better pair" >:: fun _ ->
+      assert_equal (Some player1) (best_hand board4 player1 player2) );
+    ( "best hand test 6: equal pair, no tie" >:: fun _ ->
+      assert_equal (Some player7) (best_hand board3 player1 player7) );
+    ( "best hand test 7: equal pair, tie" >:: fun _ ->
+      assert_equal None (best_hand board4 player2 player9) );
+    ( "best hand test 6: pair vs two pair" >:: fun _ ->
+      assert_equal (Some player3) (best_hand board1 player2 player3) );
+    ( "best hand test 7: better two pair" >:: fun _ ->
+      assert_equal (Some player10) (best_hand board1 player10 player3) );
+    ( "best hand test 8: equal two pair, no tie" >:: fun _ ->
+      assert_equal (Some player2) (best_hand board5 player2 player3) );
+    ( "best hand test 9: equal two pair, tie" >:: fun _ ->
+      assert_equal None (best_hand board5 player3 player11) );
+  ]
+
 let suite =
   "test suite"
   >::: List.flatten
@@ -354,30 +499,10 @@ let suite =
            category_helper_tests;
            is_category_tests;
            hand_category_tests;
+           best_player_hand_tests;
+           best_hand_tests;
          ]
 
 let _ = run_test_tt_main suite
-let starter_deck = shuffle_deck full_deck
-let card1 = top_card starter_deck
-let resulting_deck = draw_card starter_deck
-let card2 = top_card resulting_deck
-let resulting_deck = draw_card resulting_deck
 
-(* let card3 = top_card resulting_deck *)
-let resulting_deck = draw_card resulting_deck
-
-(* let card4 = top_card resulting_deck *)
-let resulting_deck = draw_card resulting_deck
-let flop, post_flop_deck = draw_flop resulting_deck
-let turn_card, post_turn_deck = draw_turn_river post_flop_deck
-let turn = flop @ [ turn_card ]
-let river_card, post_river_deck = draw_turn_river post_turn_deck
-let board = turn @ [ river_card ]
-let () = print_cards board
-let p1 = { name = "Tony"; hand = [ card1; card2 ]; chips = 100 }
-
-(* let () = print_endline "Player 1 hand:" *)
-let () = print_cards p1.hand
-let () = print_best_player_hand board p1
-(* let p2 = { name = "Camilo"; hand = [ card3; card4 ]; chips = 100 } let () =
-   print_endline "Player 2 hand:" let () = print_cards p2.hand *)
+(* DEBUGGING SPACE *)

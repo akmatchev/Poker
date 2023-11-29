@@ -468,14 +468,15 @@ let best_player_hand (board : card list) (player_hand : card list) : category =
 let print_best_player_hand (board : card list) (player : player) : unit =
   print_endline (category_to_string (best_player_hand board player.hand))
 
-(**[better_hand] compares which player has the better hand in a given game of
+(**[best_hand] compares which player has the better hand in a given game of
    poker. Returns: a negative integer if [player1] has a worse hand than
    [player2], 0 if their hands are equal, and 1 if [player1] has a better hand
    than [player2]. Requires: [board] and [player_hand] are valid boards and two
    card hands (no overlap/duplicates)*)
 
-let better_hand (board : card list) (player1 : player) (player2 : player) : int
-    =
+let best_hand (board : card list) (player1 : player) (player2 : player) :
+    player option =
   let player1_hand = best_player_hand board player1.hand in
   let player2_hand = best_player_hand board player2.hand in
-  compare_hands player1_hand player2_hand
+  let c = compare_hands player1_hand player2_hand in
+  if c < 0 then Some player2 else if c = 0 then None else Some player1
