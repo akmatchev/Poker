@@ -383,6 +383,33 @@ let board5 =
     { rank = 7; suit = Spades };
   ]
 
+let board6 =
+  [
+    { rank = 13; suit = Spades };
+    { rank = 13; suit = Diamonds };
+    { rank = 13; suit = Clubs };
+    { rank = 4; suit = Hearts };
+    { rank = 7; suit = Spades };
+  ]
+
+let board7 =
+  [
+    { rank = 2; suit = Spades };
+    { rank = 7; suit = Diamonds };
+    { rank = 8; suit = Clubs };
+    { rank = 9; suit = Hearts };
+    { rank = 10; suit = Spades };
+  ]
+
+let board8 =
+  [
+    { rank = 2; suit = Diamonds };
+    { rank = 7; suit = Diamonds };
+    { rank = 8; suit = Diamonds };
+    { rank = 9; suit = Diamonds };
+    { rank = 10; suit = Diamonds };
+  ]
+
 let player_hand1 =
   [ { rank = 10; suit = Hearts }; { rank = 4; suit = Diamonds } ]
 
@@ -409,6 +436,18 @@ let player_hand10 =
   [ { rank = 2; suit = Spades }; { rank = 14; suit = Spades } ]
 
 let player_hand11 = [ { rank = 2; suit = Spades }; { rank = 3; suit = Spades } ]
+
+let player_hand12 =
+  [ { rank = 2; suit = Spades }; { rank = 2; suit = Diamonds } ]
+
+let player_hand13 =
+  [ { rank = 11; suit = Spades }; { rank = 8; suit = Diamonds } ]
+
+let player_hand14 =
+  [ { rank = 7; suit = Spades }; { rank = 11; suit = Diamonds } ]
+
+let player_hand15 =
+  [ { rank = 2; suit = Diamonds }; { rank = 11; suit = Diamonds } ]
 
 let best_player_hand_tests =
   [
@@ -463,6 +502,10 @@ let player8 = { name = "Player8"; hand = player_hand8; chips = 100 }
 let player9 = { name = "Player9"; hand = player_hand9; chips = 100 }
 let player10 = { name = "Player10"; hand = player_hand10; chips = 100 }
 let player11 = { name = "Player11"; hand = player_hand11; chips = 100 }
+let player12 = { name = "Player12"; hand = player_hand12; chips = 100 }
+let player13 = { name = "Player13"; hand = player_hand13; chips = 100 }
+let player14 = { name = "Player14"; hand = player_hand14; chips = 100 }
+let player15 = { name = "Player15"; hand = player_hand15; chips = 100 }
 
 let best_hand_tests =
   [
@@ -478,16 +521,36 @@ let best_hand_tests =
       assert_equal (Some player1) (best_hand board4 player1 player2) );
     ( "best hand test 6: equal pair, no tie" >:: fun _ ->
       assert_equal (Some player7) (best_hand board3 player1 player7) );
-    ( "best hand test 7: equal pair, tie" >:: fun _ ->
+    ( "best hand test 8: equal pair, tie" >:: fun _ ->
       assert_equal None (best_hand board4 player2 player9) );
-    ( "best hand test 6: pair vs two pair" >:: fun _ ->
+    ( "best hand test 9: pair vs two pair" >:: fun _ ->
       assert_equal (Some player3) (best_hand board1 player2 player3) );
-    ( "best hand test 7: better two pair" >:: fun _ ->
+    ( "best hand test 10: better two pair" >:: fun _ ->
       assert_equal (Some player10) (best_hand board1 player10 player3) );
-    ( "best hand test 8: equal two pair, no tie" >:: fun _ ->
+    ( "best hand test 11: equal two pair, no tie" >:: fun _ ->
       assert_equal (Some player2) (best_hand board5 player2 player3) );
-    ( "best hand test 9: equal two pair, tie" >:: fun _ ->
+    ( "best hand test 12: equal two pair, tie" >:: fun _ ->
       assert_equal None (best_hand board5 player3 player11) );
+    ( "best hand test 13: two pair vs three of a kind" >:: fun _ ->
+      assert_equal (Some player4) (best_hand board1 player3 player4) );
+    ( "best hand test 14: better three pair" >:: fun _ ->
+      assert_equal (Some player4) (best_hand board1 player4 player12) );
+    ( "best hand test 15: equal three pair, no tie" >:: fun _ ->
+      assert_equal (Some player7) (best_hand board6 player2 player7) );
+    ( "best hand test 16: equal three pair, tie" >:: fun _ ->
+      assert_equal None (best_hand board6 player2 player9) );
+    ( "best hand test 17: three of a kind vs straight" >:: fun _ ->
+      assert_equal (Some player5) (best_hand board1 player4 player5) );
+    ( "best hand test 18: better straight" >:: fun _ ->
+      assert_equal (Some player7) (best_hand board7 player2 player7) );
+    ( "best hand test 19: equal straight" >:: fun _ ->
+      assert_equal None (best_hand board7 player14 player15) );
+    ( "best hand test 20: straight vs flush" >:: fun _ ->
+      assert_equal (Some player6) (best_hand board1 player5 player6) );
+    ( "best hand test 21: better flush" >:: fun _ ->
+      assert_equal (Some player7) (best_hand board1 player6 player7) );
+    ( "best hand test 22: equal flush" >:: fun _ ->
+      assert_equal None (best_hand board8 player8 player9) );
   ]
 
 let suite =
