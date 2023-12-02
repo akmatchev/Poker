@@ -112,6 +112,46 @@ let royal_flush =
     { rank = 12; suit = Spades };
   ]
 
+let makeCard r s = { rank = r; suit = s }
+
+let makeAllCards r s =
+  let helper r = List.map (fun x -> makeCard r x) suits in
+  List.flatten (List.map (fun x -> helper x) r)
+
+let makeRoyalFlushes () =
+  let makeRoyalSuit s =
+    let ranks = [ 14; 13; 12; 11; 10 ] in
+    List.map (fun x -> makeCard x s) ranks
+  in
+  List.map (fun x -> makeRoyalSuit x) suits
+
+let makeStraightFlushes () =
+  let makeStraightSuit s =
+    let ranks = [ 2; 3; 4; 5; 6; 7; 8; 9 ] in
+    let makeStraight r s =
+      [
+        makeCard r s;
+        makeCard (r + 1) s;
+        makeCard (r + 2) s;
+        makeCard (r + 3) s;
+        makeCard (r + 4) s;
+      ]
+    in
+    List.map (fun x -> makeStraight x s) ranks
+  in
+  List.map (fun x -> makeStraightSuit x) suits
+
+let makeQuads () =
+  let makeQuadHand r =
+    let makeQuad r = List.map (fun x -> makeCard r x) suits in
+    let makeHand c1 t = c1 :: t in
+    let remainingRanks = List.filter (fun x -> x <> r) ranks in
+    let remainingCards = makeAllCards remainingRanks suits in
+    let quad = makeQuad r in
+    List.map (fun x -> makeHand x quad) remainingCards
+  in
+  List.map (fun x -> makeQuadHand x) ranks
+
 let helper_tests =
   [
     ( "category_to_string test" >:: fun _ ->
