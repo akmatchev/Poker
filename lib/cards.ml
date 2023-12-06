@@ -155,6 +155,20 @@ let print_cards lst = print_endline (cards_to_ascii lst)
    the deck is nonemtpy*)
 let draw_card lst = List.tl lst
 
+(**[draw_hands] draws the hands for two players. Returns: (h1, h2, r_deck),
+   where h1 is the hand of player1, h2 is the hand of player2, and r_deck is the
+   remaining deck *)
+let draw_hands deck =
+  let p1card1 = top_card deck in
+  let d1 = draw_card deck in
+  let p2card1 = top_card d1 in
+  let d2 = draw_card d1 in
+  let p1card2 = top_card d2 in
+  let d3 = draw_card d2 in
+  let p2card2 = top_card d3 in
+  let r_deck = draw_card d3 in
+  ([ p1card1; p1card2 ], [ p2card1; p2card2 ], r_deck)
+
 (**[draw_flop] draws the flop of the current deck. Returns: a tuple of card
    lists. The first element is the flop and the second element is the resulting
    deck. Requires: the size of the deck is greater than 4*)

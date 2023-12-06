@@ -57,6 +57,11 @@ val draw_card : card list -> card list
 (**[draw_card] draws a card from the top of the deck and returns the resulting
    deck*)
 
+val draw_hands : card list -> card list * card list * card list
+(**[draw_hands] draws the hands for two players. Returns: (h1, h2, r_deck),
+   where h1 is the hand of player1, h2 is the hand of player2, and r_deck is the
+   remaining deck *)
+
 val draw_flop : card list -> card list * card list
 (**[drop_flop] draws a flop from the given deck of cards. It returns the three
    cards of the flop as well as the resulting deck*)
