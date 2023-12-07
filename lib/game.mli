@@ -1,6 +1,7 @@
 open Cards
 open Player
 
+(** Abstract type for representing different states of a round of poker *)
 type game_state =
   | PreFlop of {
       player1 : player;
@@ -44,6 +45,8 @@ type game_state =
       pot : int;
     }
 
+(** Abstract representation type for representing different actions a player can
+    take during a round of poker*)
 type action =
   | Check
   | Bet of int

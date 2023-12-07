@@ -5,6 +5,7 @@ type player = {
   hand : card list;
   chips : int;
 }
+(** Abstract representation type for a player in poker*)
 
 (** [get_player_chips player] returns the number of chips the given [player]
     has. *)
