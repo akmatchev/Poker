@@ -26,8 +26,8 @@ finalcheck:
 	@bash check.sh final
 
 zip:
-	rm -f cards.zip
-	zip -r cards.zip . -x@exclude.lst
+	rm -f poker.zip
+	zip -r poker.zip . -x@exclude.lst
 
 clean:
 	dune clean
