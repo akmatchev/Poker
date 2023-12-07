@@ -50,11 +50,6 @@ type action =
   | Bet of int
   | Fold
 
-let print_lines () =
-  for i = 1 to 50 do
-    print_endline ""
-  done
-
 (** [init_game players small_blind big_blind] initializes a new poker game with
     the given [players], [small_blind], and [big_blind]. *)
 let init_game (player1 : player) (player2 : player) : game_state =
@@ -90,7 +85,7 @@ let transition_to_flop (game : game_state) : game_state =
           board = flop;
           player1;
           player2;
-          pot = 0;
+          pot;
           minbet = 0;
           deck = post_flop_deck;
         }
@@ -170,6 +165,82 @@ let transition_to_end game =
       End { winner = best_hand board player1 player2; pot }
   | _ -> failwith "Invalid transition to End state"
 
+(**[state_to_string] converts a game state to its string representation. Used
+   for testing*)
+let state_to_string (state : game_state) : string =
+  let card_to_string (card : card) : string =
+    Printf.sprintf "(Rank: %s, Suit: %s)" (rank_to_string card.rank)
+      (suit_to_string card.suit)
+  in
+  let cards_to_string (cards : card list) : string =
+    String.concat ", " (List.map card_to_string cards)
+  in
+  let player_to_string (player : player) : string =
+    Printf.sprintf "Chips: %d, Hand: %s" player.chips
+      (cards_to_string player.hand)
+  in
+  let winner_to_string (winner : player option) : string =
+    match winner with
+    | Some player ->
+        Printf.sprintf "%s\n %s" player.name (player_to_string player)
+    | None -> "No Winner"
+  in
+  match state with
+  | PreFlop { player1; player2; pot; minbet; deck } ->
+      Printf.sprintf
+        "PreFlop:\nPlayer 1: %s\nPlayer 2: %s\nPot: %d\nMin Bet: %d\nDeck: %s"
+        (player_to_string player1) (player_to_string player2) pot minbet
+        (card_to_string (top_card deck))
+  | Flop { board; player1; player2; pot; minbet; deck } ->
+      Printf.sprintf
+        "Flop:\n\
+         Board: %s\n\
+         Player 1: %s\n\
+         Player 2: %s\n\
+         Pot: %d\n\
+         Min Bet: %d\n\
+         Deck: %s" (cards_to_string board) (player_to_string player1)
+        (player_to_string player2) pot minbet
+        (card_to_string (top_card deck))
+  | Turn { board; player1; player2; pot; minbet; deck } ->
+      Printf.sprintf
+        "Turn:\n\
+         Board: %s\n\
+         Player 1: %s\n\
+         Player 2: %s\n\
+         Pot: %d\n\
+         Min Bet: %d\n\
+         Deck: %s" (cards_to_string board) (player_to_string player1)
+        (player_to_string player2) pot minbet
+        (card_to_string (top_card deck))
+  | River { board; player1; player2; pot; minbet; deck } ->
+      Printf.sprintf
+        "River:\n\
+         Board: %s\n\
+         Player 1: %s\n\
+         Player 2: %s\n\
+         Pot: %d\n\
+         Min Bet: %d\n\
+         Deck: %s" (cards_to_string board) (player_to_string player1)
+        (player_to_string player2) pot minbet
+        (card_to_string (top_card deck))
+  | Showdown { board; player1; player2; pot } ->
+      Printf.sprintf "Showdown:\nBoard: %s\nPlayer 1: %s\nPlayer 2: %s\nPot: %d"
+        (cards_to_string board) (player_to_string player1)
+        (player_to_string player2) pot
+  | End { winner; pot } ->
+      Printf.sprintf "End:\nWinner: %s\nPot: %d" (winner_to_string winner) pot
+
+let print_lines () =
+  for i = 1 to 100 do
+    print_endline ""
+  done
+
+let ready_input (player : int) () =
+  if player = 1 then print_endline "Player 1: Press Enter when ready"
+  else print_endline "Player 2: Press Enter when ready";
+  ignore (read_line ())
+
 (**[get_bet_action] gets a valid bet action from a player with chips [chips] and
    whose bet to match is [minbet]*)
 let rec get_bet_action (chips : int) (minbet : int) () : int =
@@ -190,9 +261,9 @@ let rec get_bet_action (chips : int) (minbet : int) () : int =
   else
     try
       let bet_amount = read_int () in
-      if bet_amount <= minbet then (
+      if bet_amount <> minbet then (
         print_endline
-          ("Invalid bet aount. Bet must be " ^ string_of_int minbet ^ ".");
+          ("Invalid bet amount. Bet must be " ^ string_of_int minbet ^ ".");
         get_bet_action chips minbet ())
       else if bet_amount > chips then (
         print_endline "Invalid bet. You do not have enough chips!";
@@ -224,13 +295,32 @@ let rec get_player_action (player : player) (minbet : int) () : action =
 let round (game : game_state) : game_state =
   match game with
   | PreFlop { player1; player2; pot; minbet; deck } as p -> (
+      print_lines ();
+      ready_input 1 ();
+      print_endline "Player 1 Hand:";
+      print_cards player1.hand;
+      print_endline ("Player 1 chips: " ^ string_of_int player1.chips);
+      print_endline "Player 1: What would you like to do (check/bet/fold)?";
       let player1_action = get_player_action player1 0 () in
       match player1_action with
       | Check -> (
+          ready_input 2 ();
+          print_lines ();
+          print_endline "Player 2 Hand:";
+          print_cards player2.hand;
+          print_endline ("Player 2 chips: " ^ string_of_int player2.chips);
+          print_endline "Player 2: What would you like to do (check/bet/fold)?";
           let player2_action = get_player_action player2 0 () in
           match player2_action with
           | Check -> transition_to_flop p
           | Bet b -> (
+              ready_input 1 ();
+              print_lines ();
+              print_endline "Player 1 Hand:";
+              print_cards player1.hand;
+              print_endline ("Player 2 bet " ^ string_of_int b ^ " chips");
+              print_endline ("Player 1 chips: " ^ string_of_int player1.chips);
+              print_endline "Player 1: What would you like to do (bet/fold)?";
               let pl2 = remove_chips player2 b in
               let minbet = b in
               let pot2 = pot + b in
@@ -263,6 +353,12 @@ let round (game : game_state) : game_state =
               | Check -> failwith "Impossible")
           | Fold -> End { winner = Some player1; pot })
       | Bet b -> (
+          ready_input 2 ();
+          print_lines ();
+          print_endline "Player 2 Hand:";
+          print_cards player1.hand;
+          print_endline ("Player 1 bet " ^ string_of_int b ^ " chips");
+          print_endline "Player 2: What would you like to do (bet/fold)?";
           let pl1 = remove_chips player1 b in
           let minbet = b in
           let pot2 = pot + b in

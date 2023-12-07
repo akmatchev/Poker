@@ -75,6 +75,10 @@ val transition_to_showdown : game_state -> game_state
 val transition_to_end : game_state -> game_state
 (** [transition_to_end game] transitions the game state to the End state . *)
 
+val state_to_string : game_state -> string
+(**[state_to_string] converts a game state to its string representation. Used
+   for testing*)
+
 val get_bet_action : int -> int -> unit -> int
 (**[get_bet_action] gets a valid bet action from a player with chips [chips] and
    whose bet to match is [minbet]*)
