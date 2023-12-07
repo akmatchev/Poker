@@ -50,14 +50,14 @@ type action =
   | Bet of int
   | Fold
 
-(** [init_game players small_blind big_blind] initializes a new poker game with
-    the given [players], [small_blind], and [big_blind]. *)
+(** [init_game players] initializes a new poker game with the given [player1]
+    and [player2]. *)
 let init_game (player1 : player) (player2 : player) : game_state =
   PreFlop
     { player1; player2; pot = 0; minbet = 0; deck = shuffle_deck full_deck }
 
-(** [transition_to_flop game flop_cards] transitions the game state to the Flop
-    state with the given [flop_cards]. *)
+(** [transition_to_flop game] transitions the game state to the Flop state with
+    the given preflop state [game]. *)
 let transition_to_flop (game : game_state) : game_state =
   match game with
   | PreFlop { player1; player2; pot; minbet; deck } ->
@@ -73,8 +73,8 @@ let transition_to_flop (game : game_state) : game_state =
         }
   | _ -> failwith "Invalid transition to Flop state"
 
-(** [transition_to_turn game turn_card] transitions the game state to the Turn
-    state with the given [turn_card]. *)
+(** [transition_to_turn game] transitions the game state to the Turn state with
+    the given frop state [game]. *)
 let transition_to_turn (game : game_state) : game_state =
   match game with
   | Flop { board; player1; player2; pot; deck } ->
@@ -90,8 +90,8 @@ let transition_to_turn (game : game_state) : game_state =
         }
   | _ -> failwith "Invalid transition to Turn state"
 
-(** [transition_to_river game river_card] transitions the game state to the
-    River state with the given [river_card]. *)
+(** [transition_to_river game] transitions the game state to the River state
+    with the given turn state [game]. *)
 let transition_to_river (game : game_state) : game_state =
   match game with
   | Turn { board; player1; player2; pot; deck } ->
@@ -107,8 +107,8 @@ let transition_to_river (game : game_state) : game_state =
         }
   | _ -> failwith "Invalid transition to River state"
 
-(** [transition_to_showdown game winners] transitions the game state to the
-    Showdown state with the given [winners]. *)
+(** [transition_to_showdown game] transitions the game state to the Showdown
+    state with the given river state [game]. *)
 let transition_to_showdown (game : game_state) : game_state =
   match game with
   | PreFlop { player1; player2; pot; minbet; deck } ->
@@ -139,8 +139,8 @@ let transition_to_showdown (game : game_state) : game_state =
       Showdown { board; player1; player2; pot }
   | _ -> failwith "Invalid transition to Showdown state"
 
-(** [transition_to_end game winners] transitions the game state to the End state
-    with the given [winners]. *)
+(** [transition_to_end game] transitions the game state to the End state with
+    the given showdown state [game]. *)
 let transition_to_end game =
   match game with
   | Showdown { board; player1; player2; pot } ->
@@ -213,17 +213,23 @@ let state_to_string (state : game_state) : string =
   | End { winner; pot } ->
       Printf.sprintf "End:\nWinner: %s\nPot: %d" (winner_to_string winner) pot
 
-(*Printer helper functions*)
+(**[print_lines ()] prints 100 lines in the terminal. Used in the user interface
+   so that players cannot see other players' cards*)
 let print_lines () =
   for i = 1 to 100 do
     print_endline ""
   done
 
+(**[ready_input player ()] is a sequence of print statements that is used when
+   transitioning from [player1] to [player2] and vice versa. Used when a player
+   is handing over the computer to another player *)
 let ready_input (player : int) () =
   if player = 1 then print_endline "Player 1: Press Enter when ready"
   else print_endline "Player 2: Press Enter when ready";
   ignore (read_line ())
 
+(**[print_board board] prints the cards that are on the [board] currently. Used
+   as part of the user interface*)
 let print_board board () =
   print_endline "Board:";
   print_cards board

@@ -1,3 +1,37 @@
+(**TESTING PLAN: We manually tested the functions in: cards.ml, game.ml,
+   player.ml, and wrote OUnit tests for: hands.ml. We decided to manually test
+   cards.ml because it was very straightforward to manually test and we had made
+   a plan beforehand that the majority of our OUnit tests would be for hand
+   evaluation in hands.ml, since there are many different cases of comparing
+   hands we could test to achieve the minimum 50 passing test cases. game.ml is
+   virtually impossible to test through OUnit because we are shuffling the deck
+   before the start of the round, so there is no expected output. We manually
+   tested player.ml because there are so few functions that we ended up using.
+   We initially had more functions in player.ml that we had tests for, but they
+   served no purpose in our final deliverable so we ended up deleting those
+   tests. For OUnit tests, we used glass-box testing for the helper functions
+   like [category_to_string] to get a sense of how they were implemented/how
+   they operated, and once we knew that those worked, we used a combination of
+   black-box and glass-box testing for [is_category_tests],
+   [hand_category_tests], and [best_hand_tests]. We initially had some
+   randomized tests when first testing the category of different hands but we
+   ended up not using them after we changed our hand implementation. Our testing
+   approach shows correctness of our system because we used a combination of
+   black-box and glass-box testing, which is the recommended approach for
+   achieving the best functionality. To begin with, we began testing our helper
+   functions to ensure that those performed their desired functinality, so that
+   we could correctly use them for our black-box/glass-box tests for the
+   [hand_category] and [best_hand_tests] For our black-box tests, we wrote them
+   before actually implementing the functions we were testing, which
+   demonstrates that our functions perform well regardless of how they were
+   implemented. For our glass-box tests, we were able to take into account how
+   our functions were implemented and write our tests in a manner that
+   complemented our implementation. In both cases, we wrote down the different
+   cases in which hands were being compared and included cases where hands were
+   worse than, better than, or equal to our expected output in our test cases.
+   This ensured that our functions were performing as intended and demonstrates
+   the correctness of our system. *)
+
 open Poker
 open Cards
 open Hands
@@ -111,46 +145,6 @@ let royal_flush =
     { rank = 14; suit = Spades };
     { rank = 12; suit = Spades };
   ]
-
-let makeCard r s = { rank = r; suit = s }
-
-let makeAllCards r s =
-  let helper r = List.map (fun x -> makeCard r x) suits in
-  List.flatten (List.map (fun x -> helper x) r)
-
-let makeRoyalFlushes () =
-  let makeRoyalSuit s =
-    let ranks = [ 14; 13; 12; 11; 10 ] in
-    List.map (fun x -> makeCard x s) ranks
-  in
-  List.map (fun x -> makeRoyalSuit x) suits
-
-let makeStraightFlushes () =
-  let makeStraightSuit s =
-    let ranks = [ 2; 3; 4; 5; 6; 7; 8; 9 ] in
-    let makeStraight r s =
-      [
-        makeCard r s;
-        makeCard (r + 1) s;
-        makeCard (r + 2) s;
-        makeCard (r + 3) s;
-        makeCard (r + 4) s;
-      ]
-    in
-    List.map (fun x -> makeStraight x s) ranks
-  in
-  List.map (fun x -> makeStraightSuit x) suits
-
-let makeQuads () =
-  let makeQuadHand r =
-    let makeQuad r = List.map (fun x -> makeCard r x) suits in
-    let makeHand c1 t = c1 :: t in
-    let remainingRanks = List.filter (fun x -> x <> r) ranks in
-    let remainingCards = makeAllCards remainingRanks suits in
-    let quad = makeQuad r in
-    List.map (fun x -> makeHand x quad) remainingCards
-  in
-  List.map (fun x -> makeQuadHand x) ranks
 
 let helper_tests =
   [
