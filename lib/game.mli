@@ -53,12 +53,6 @@ val init_game : player -> player -> game_state
 (** [init_game player1 player2] initializes a new poker game with the given
     [player1] and [player2]. *)
 
-val get_pot : game_state -> int
-(** [get_pot game] returns the current pot in the current game state. *)
-
-val get_board_state : game_state -> card list
-(** [get_board_state game] returns the board cards in the current game state. *)
-
 val transition_to_flop : game_state -> game_state
 (** [transition_to_flop game] transitions the game state to the Flop state . *)
 

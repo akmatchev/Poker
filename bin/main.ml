@@ -13,20 +13,18 @@ let royal_flush =
     { rank = 14; suit = Spades };
   ]
 
-let fresh_deck = shuffle_deck full_deck
-let p1hand, p2hand, deck = draw_hands fresh_deck
-let player1 = { name = "Player 1"; hand = p1hand; chips = 100 }
-let player2 = { name = "Player 2"; hand = p2hand; chips = 100 }
-let flop, post_flop_deck = draw_flop deck
-let turn, post_turn_deck = draw_turn_river post_flop_deck
-let turn_board = List.rev (turn :: List.rev flop)
-let river, post_river_deck = draw_turn_river post_turn_deck
-let final_board = List.rev (river :: List.rev turn_board)
-let pot = ref 0
-
-(* let print_lines () = for i = 1 to 50 do print_endline "" done *)
-
-let preflop = init_game player1 player2
+let end_message (game : game_state) =
+  match game with
+  | End { winner; pot } -> (
+      match winner with
+      | None ->
+          print_endline
+            ("Player 1 and Player 2 split the pot of " ^ string_of_int pot
+           ^ " chips!")
+      | Some player ->
+          print_endline (player.name ^ " wins " ^ string_of_int pot ^ " chips!")
+      )
+  | _ -> failwith "Impossible"
 
 let welcome =
   print_cards royal_flush;
@@ -52,13 +50,36 @@ let main () =
   let to_begin = welcome in
   if not to_begin then ()
   else
+    let fresh_deck = shuffle_deck full_deck in
+    let p1hand, p2hand, deck = draw_hands fresh_deck in
     let player1 = { name = "Player 1"; hand = p1hand; chips = 100 } in
     let player2 = { name = "Player 2"; hand = p2hand; chips = 100 } in
     let preflop = init_game player1 player2 in
     let post_preflop_state = round preflop in
     match post_preflop_state with
-    | Flop f -> print_endline (state_to_string post_preflop_state)
-    | End { winner; pot } -> print_endline (state_to_string post_preflop_state)
+    | Flop _ -> (
+        let post_flop_state = round post_preflop_state in
+        match post_flop_state with
+        | Turn _ -> (
+            let post_turn_state = round post_flop_state in
+            match post_turn_state with
+            | River _ -> (
+                let post_river_state = round post_turn_state in
+                match post_river_state with
+                | Showdown _ ->
+                    post_river_state |> transition_to_end |> end_message
+                | End { winner; pot } -> end_message post_river_state
+                | _ -> failwith "impossible")
+            | Showdown _ -> post_turn_state |> transition_to_end |> end_message
+            | End { winner; pot } -> end_message post_turn_state
+            | _ -> failwith "Impossible")
+        | Showdown _ -> post_flop_state |> transition_to_end |> end_message
+        | End { winner; pot } -> end_message post_flop_state
+        | _ -> failwith "impossible")
+    | Showdown _ ->
+        print_endline
+          (post_preflop_state |> transition_to_end |> state_to_string)
+    | End { winner; pot } -> end_message post_preflop_state
     | _ -> failwith "Impossible"
 
 let () = main ()
