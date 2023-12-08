@@ -352,7 +352,7 @@ let round (game : game_state) : game_state =
           print_lines ();
           ready_input 2 ();
           print_endline "Player 2 Hand:";
-          print_cards player1.hand;
+          print_cards player2.hand;
           print_endline ("Player 1 bet " ^ string_of_int b ^ " chips");
           print_endline "Player 2: What would you like to do (bet/fold)?";
           let pl1 = remove_chips player1 b in
@@ -426,8 +426,9 @@ let round (game : game_state) : game_state =
                   let finalpot = pot2 + b2 in
                   if finalpot = 200 then
                     transition_to_showdown
-                      (PreFlop
+                      (Flop
                          {
+                           board;
                            player1 = pl1;
                            player2 = pl2;
                            pot = pot2 + b2;
@@ -436,8 +437,9 @@ let round (game : game_state) : game_state =
                          })
                   else
                     transition_to_turn
-                      (PreFlop
+                      (Flop
                          {
+                           board;
                            player1 = pl1;
                            player2 = pl2;
                            pot = pot2 + b2;
@@ -452,7 +454,7 @@ let round (game : game_state) : game_state =
           ready_input 2 ();
           print_board board ();
           print_endline "Player 2 Hand:";
-          print_cards player1.hand;
+          print_cards player2.hand;
           print_endline ("Player 1 bet " ^ string_of_int b ^ " chips");
           print_endline "Player 2: What would you like to do (bet/fold)?";
           let pl1 = remove_chips player1 b in
@@ -465,8 +467,9 @@ let round (game : game_state) : game_state =
               let finalpot = pot2 + b2 in
               if finalpot = 200 then
                 transition_to_showdown
-                  (PreFlop
+                  (Flop
                      {
+                       board;
                        player1 = pl1;
                        player2 = pl2;
                        pot = pot2 + b2;
@@ -475,8 +478,9 @@ let round (game : game_state) : game_state =
                      })
               else
                 transition_to_turn
-                  (PreFlop
+                  (Flop
                      {
+                       board;
                        player1 = pl1;
                        player2 = pl2;
                        pot = pot2 + b2;
@@ -526,8 +530,9 @@ let round (game : game_state) : game_state =
                   let finalpot = pot2 + b2 in
                   if finalpot = 200 then
                     transition_to_showdown
-                      (PreFlop
+                      (Turn
                          {
+                           board;
                            player1 = pl1;
                            player2 = pl2;
                            pot = pot2 + b2;
@@ -536,8 +541,9 @@ let round (game : game_state) : game_state =
                          })
                   else
                     transition_to_river
-                      (PreFlop
+                      (Turn
                          {
+                           board;
                            player1 = pl1;
                            player2 = pl2;
                            pot = pot2 + b2;
@@ -552,7 +558,7 @@ let round (game : game_state) : game_state =
           ready_input 2 ();
           print_board board ();
           print_endline "Player 2 Hand:";
-          print_cards player1.hand;
+          print_cards player2.hand;
           print_endline ("Player 1 bet " ^ string_of_int b ^ " chips");
           print_endline "Player 2: What would you like to do (bet/fold)?";
           let pl1 = remove_chips player1 b in
@@ -565,8 +571,9 @@ let round (game : game_state) : game_state =
               let finalpot = pot2 + b2 in
               if finalpot = 200 then
                 transition_to_showdown
-                  (PreFlop
+                  (Turn
                      {
+                       board;
                        player1 = pl1;
                        player2 = pl2;
                        pot = pot2 + b2;
@@ -575,8 +582,9 @@ let round (game : game_state) : game_state =
                      })
               else
                 transition_to_river
-                  (PreFlop
+                  (Turn
                      {
+                       board;
                        player1 = pl1;
                        player2 = pl2;
                        pot = pot2 + b2;
@@ -624,8 +632,9 @@ let round (game : game_state) : game_state =
               | Bet b2 ->
                   let pl1 = remove_chips player1 b2 in
                   transition_to_showdown
-                    (PreFlop
+                    (River
                        {
+                         board;
                          player1 = pl1;
                          player2 = pl2;
                          pot = pot2 + b2;
@@ -640,7 +649,7 @@ let round (game : game_state) : game_state =
           ready_input 2 ();
           print_board board ();
           print_endline "Player 2 Hand:";
-          print_cards player1.hand;
+          print_cards player2.hand;
           print_endline ("Player 1 bet " ^ string_of_int b ^ " chips");
           print_endline "Player 2: What would you like to do (bet/fold)?";
           let pl1 = remove_chips player1 b in
@@ -651,8 +660,9 @@ let round (game : game_state) : game_state =
           | Bet b2 ->
               let pl2 = remove_chips player2 b2 in
               transition_to_showdown
-                (PreFlop
+                (River
                    {
+                     board;
                      player1 = pl1;
                      player2 = pl2;
                      pot = pot2 + b2;
